@@ -4,7 +4,6 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 
-
 export const add_city = cityData => {
     return fetch(`${API}/add_city`, {
         method: 'POST',
