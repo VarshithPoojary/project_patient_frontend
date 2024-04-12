@@ -3,8 +3,8 @@ import fetch from 'isomorphic-fetch';
 
 
 
-export const Registration = formData => {
-    return fetch(`${API}/admin_add`, {
+export const PatientRegistration = formData => {
+    return fetch(`${API}/add_patient`, {
         method: 'POST',
         body: formData
     })
@@ -12,6 +12,7 @@ export const Registration = formData => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
+            alert(JSON.stringify('form'))
             return response.json();
         })
         .catch(err => {
