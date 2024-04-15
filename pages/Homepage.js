@@ -5,13 +5,10 @@ import "../styles/Home.module.css"
 function HomePage() {
   return (
     
-    <div  className="container" style={{ width:'100%', margin: '0 auto', padding: '80px', fontFamily: 'Arial, sans-serif'}}>
+    <div  className="container" style={{ width:'100%'/*, margin: '0 auto'*/, padding: '80px', fontFamily: 'Arial, sans-serif'}}>
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    <header style={{ textAlign: 'center', marginBottom: '40px' }}>
-      <h1>Welcome to HealthCare Plus</h1>
-      <p>Your trusted partner for healthcare services</p>
-    </header>
-    <section id="services" style={{ marginBottom: '40px', width:'100%' }}>
+  
+    <section id="services" style={{ marginBottom: '40px', width:'100%',paddingTop:'0px'}}>
       <h2>Our Services</h2>
       <div style={{ backgroundColor: '#f9f9f9', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
         <h3>Primary Care</h3>
@@ -26,10 +23,16 @@ function HomePage() {
         <p> we understand the importance of immediate access to high-quality emergency medical services.You can trust our dedicated team to provide you with 24/7 emergency medical services.</p>
       </div>
     </section>
-    <section id="about" style={{ marginBottom: '40px',backgroundColor:'', width:'100%' }}>
+   
+    <section id="about" style={{marginBottom:'40px',backgroundColor:'#EBFBFF',height:'500px', width: '1250px',padding:'60px 0px'}}>
       
       <h2>About Us</h2>
-      <div style={{ backgroundColor: '#f9f9f9', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
+    {/*  <div class="col-md-5" style={{width:'400px',height:'400px'}}>
+      <div class="cardi border-0 who-card" style={{width:'400px',height:'400px'}}>
+       <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/whychoseapollo_ah.webp" class="card-img " alt="..." style={{overflow:'clip',width:'400px',height:'400px'}}/> 
+       </div>
+    </div>*/}
+      <div style={{ borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
       <p>We are dedicated to providing high-quality healthcare services to our community. Our team of experienced healthcare professionals is committed to your well-being.</p>
       <h3 className="subsection-title">Why Choose Us?</h3>
   <ul className="choose-us-list">
@@ -40,13 +43,12 @@ function HomePage() {
   </ul>
   </div>
     </section>
-    <section    id="contact" style={{ marginBottom:'160px',backgroundColor:'', width:'100%'}}>
+    <section    id="contact" style={{ marginBottom:'160px',backgroundColor:'',width:'100%'}}>
         <h2>Contact Us</h2>
         <p>Get in touch with us to schedule an appointment or inquire about our services.</p>
         <p>Phone: <span style={{color: 'blue'}}>123-456-7890</span></p>
        <p>Email: <span style={{color: 'blue'}}>info@healthcareplus.com</span></p>
-       {/* <p>Phone: 123-456-7890</p>
-        <p>Email: info@healthcareplus.com</p>*/}
+      
       </section>
   
   </div>
