@@ -34,8 +34,72 @@ function App() {
       
     </ul>
   </nav>
-  
-        
+  <header style={{ textAlign: 'center', marginBottom:'30px', paddingTop:'120px'}}>
+      <h1>Welcome to HealthCare Plus</h1>
+      <p>Your trusted partner for healthcare services</p>
+    </header>
+  <section class="top-widgets">
+  <div class="widget-mr" >
+            <div class="container text-center">
+                <div class="row justify-content-center">
+                    <div class="col-md-11">
+                        <div class="row row-cols-3 row-cols-lg-6 g-2 g-lg-4">
+                               <div class="col">
+                                 <a href="./login" target="_blank" class="tp_widget" id="btn-cta-bb-book-appointment" style={{color:'#0071BA',fontWeight:'600px'}}>
+                                    <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/bookappt_icon.svg" alt="icon" width="64"/>
+                                    <h5>Book Appointment</h5>
+                                 </a>
+                              </div>
+                               <div class="col  d-none d-sm-block">
+                     <a href="./Registration" target="_blank" class="tp_widget" id="btn-cta-bb-book-prohealth">
+                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/bookhelathcheck_icon.svg" alt="icon"/>
+                        <h5>Book Health Check-Up</h5>
+                     </a>
+                  </div>
+                  <div class="col d-sm-none d-block">
+                     <a href="./Registration" target="_blank" class="tp_widget" id="btn-cta-bb-book-prohealth">
+                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/bookhelathcheck_icon.svg" alt="icon"/>
+                        <h5>Book Health Check-Up</h5>
+                     </a>
+                  </div>
+                              <div class="col">
+                                 <a href="./Registration" id="btn-cta-bb-consult-online" target="_blank" class="tp_widget">
+                                    <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/buymedicines_icon.svg" alt="icon"/>
+                                    <h5>Consult Online</h5>
+                                 </a>
+                              </div>
+                              <div class="col">
+                                 <a href="./Registration" id="btn-cta-bb-buy-medicine" target="_blank" class="tp_widget">
+                                    <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/consultonline_icon.svg" alt="icon"/>
+                                    <h5>Buy Medicine</h5>
+                                 </a>
+                              </div>
+                            
+                              <div class="col">
+                                 <a href="./Registration" id="btn-cta-bb-find-hospital" class="tp_widget">
+                                    <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/findhsptl_icon.svg" alt="icon"/>
+                                    <h5>Find Hospital</h5>
+                                 </a>
+                              </div>
+                              <div class="col">
+                                 <a href="./Registration" target="_blank" id="btn-cta-bb-book-labtest" class="tp_widget">
+                                    <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/finddoctor_icon.svg" alt="icon"/>
+                                    <h5>View Health Record</h5>
+                                 </a>
+                              </div> 
+    
+    
+                        </div>
+                    </div>
+                   
+                </div>
+    
+    
+            </div>
+        </div>
+        <div class="clear-fix"></div>
+    
+    </section>
         <HomePage />
         <Footer />
       </div>
