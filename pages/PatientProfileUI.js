@@ -20,11 +20,11 @@ const PatientProfile = () => {
             background-color: #f5f5f5;
           }
 
-          img {
+           img {
             max-width: 100%;
             vertical-align: middle;
             border-style: none;
-          }
+          }    
 
           
           .about-avatar {
