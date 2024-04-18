@@ -12,7 +12,6 @@ export const PatientRegistration = formData => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            alert(JSON.stringify('form'))
             return response.json();
         })
         .catch(err => {

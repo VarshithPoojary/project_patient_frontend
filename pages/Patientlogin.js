@@ -37,6 +37,14 @@ const LoginForm = () => {
                                 <i className="button__icon fas fa-chevron-right"></i>
                             </button>
                         </Link>
+                        <div className="text-center mt-3 login-link">
+                            Don't have account?{' '}
+                            <div>
+                            <Link href="/PatientRegistration">
+                                <a>Register Here</a>
+                            </Link>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div className="screen__background">
@@ -45,6 +53,7 @@ const LoginForm = () => {
                     <span className="screen__background__shape screen__background__shape2"></span>
                     <span className="screen__background__shape screen__background__shape1"></span>
                 </div>
+               
             </div>
         </div>
     );

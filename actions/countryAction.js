@@ -21,10 +21,9 @@ export const add_country = countryData => {
 };
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 4cab843005288d3f6b27c251747f799c87ca3e84
+
+
 
 export const country_list = () => {
     return fetch(`${API}/admin_country_list`,{
@@ -41,10 +40,7 @@ export const country_list = () => {
 };
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 4cab843005288d3f6b27c251747f799c87ca3e84
 export const CountryListById = country => {
     var id={"_id":country};
     return fetch(`${API}/admin_country_list_by_id`, {
@@ -93,8 +89,5 @@ export const update_country= countryData => {
         })
         .catch(err => console.log(err));
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> 4cab843005288d3f6b27c251747f799c87ca3e84
 

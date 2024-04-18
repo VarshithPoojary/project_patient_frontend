@@ -30,7 +30,7 @@ function App() {
       <li className="nav-item"><a href="#services" className="nav-link">Services</a></li>
       <li className="nav-item"><a href="#about" className="nav-link">About Us</a></li>
       <li className="nav-item"><a href="#contact" className="nav-link">Contact</a></li>
-      <li className="nav-item"><a href="./login" className="nav-link">LOGIN</a></li>
+      <li className="nav-item"><a href="./Patientlogin" className="nav-link">LOGIN</a></li>
       
     </ul>
   </nav>
