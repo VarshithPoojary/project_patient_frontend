@@ -38,7 +38,7 @@ const Header = () => {
     if (typeof window !== 'undefined') {
       const user_id = localStorage.getItem('id');
       if (!user_id) { 
-        Router.push('/login');
+        Router.push('/Patientlogin');
       } else {
         loadUserDetails(user_id);
       }

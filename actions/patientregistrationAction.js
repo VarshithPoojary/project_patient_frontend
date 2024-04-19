@@ -20,3 +20,53 @@ export const PatientRegistration = formData => {
         });
 };
 
+export const patient_list = () => {
+    return fetch(`${API}/patient_list`,{
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const getOtpByEmail = otpData => {
+    var email={"patient_email":otpData};
+    return fetch(`${API}/getOtpByEmail`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(email)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const Patientsignin = patientLogin => {
+    return fetch(`${API}/Patientlogin`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(patientLogin)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const authenticate = (data, callback) => {
+    console.log('Authenticating user:', data);
+    localStorage.setItem('user', JSON.stringify(data));
+    callback();
+};

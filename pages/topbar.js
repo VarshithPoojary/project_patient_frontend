@@ -29,7 +29,7 @@ const Topbar = () => {
       if (typeof window !== 'undefined') {
         const user_id = localStorage.getItem('id');
         if (user_id === "" || user_id === null || user_id === undefined) {
-          Router.push('/login');
+          Router.push('/Patientlogin');
         } else {
           loadUserDetails(user_id);
         }
