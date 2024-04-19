@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
-import { verifyOTP } from '../actions/forgotpasswordAction';
+import { getOtpByEmail } from '../actions/patientregistrationAction';
 
 const OTPPage = () => {
   const [otpDigits, setOtpDigits] = useState('');
@@ -16,14 +16,24 @@ const OTPPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Submitting form...');
+
+    const userEmail = localStorage.getItem('userEmail');
+
     try {
-      const response = await verifyOTP(otpDigits); 
-      setMessage(response.message);
-      setError('');
-      if (response.message === 'OTP verified successfully') {
-        Router.push('/Dashboard');
+      const response = await getOtpByEmail(userEmail);
+      const user = response;
+
+      if (user.patient_otp === otpDigits) { 
+        setMessage('OTP verified successfully');
+        setError('');
+        localStorage.removeItem('userEmail');
+        Router.push('/Patientlogin');
+      } else {
+        setMessage('');
+        setError('Wrong OTP');
       }
     } catch (err) {
+      console.error('Failed to verify OTP:', err);
       setMessage('');
       setError('Failed to verify OTP');
     }
@@ -40,7 +50,7 @@ const OTPPage = () => {
       <div className="container">
         <div className="screen">
           <div className="screen__content">
-            <b className="login-text" style={{ marginRight: "70%" ,marginTop:"10%"}}>OTP</b>
+            <b className="login-text" style={{ marginRight: "70%", marginTop: "10%" }}>OTP</b>
             <form className="login mt-3" onSubmit={handleSubmit}>
               <div className="row gx-3 mb-3">
                 <div className="col-md-6">
@@ -62,14 +72,14 @@ const OTPPage = () => {
               </div>
               <div className="d-grid">
                 <button className="button login__submit" type="submit">
-                  <span className="button__text">Login</span>
+                  <span className="button__text">Submit</span>
                   <i className="button__icon fas fa-chevron-right"></i>
                 </button>
               </div>
             </form>
             {message && <div className="alert alert-success mt-1">{message}</div>}
             {error && <div className="alert alert-danger mt-1">{error}</div>}
-            <div className="mt-9 text-center" style={{ marginRight: "20%"}}>
+            <div className="mt-9 text-center" style={{ marginRight: "20%" }}>
               <Link href="/Patientlogin">Back</Link>
               <span>&nbsp;|&nbsp;</span>
               <Link href="/ResendOTP">Resend OTP</Link>

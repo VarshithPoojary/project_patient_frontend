@@ -9,6 +9,7 @@ import { city_list_by_state_id } from '../actions/cityAction';
 
 
 const PatientRegistrations = () => {
+    const [values,setValues]=useState('');
     const [countryList, setCountryList] = useState([]);
     const [stateDetail, setStateDetail] = useState([]);
     const [cityList, setCityList] = useState([]);
@@ -26,6 +27,8 @@ const PatientRegistrations = () => {
     const [area, setArea] = useState('');
     const [pincode, setPincode] = useState('');
     const [mainAddress, setMainAddress] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePhoto, setProfilePhoto] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -44,7 +47,15 @@ const PatientRegistrations = () => {
         area: '',
         pincode: '',
         mainAddress: '',
+        patient_password:'',
         profilePhoto: '', 
+    });
+    const [passwordValidations, setPasswordValidations] = useState({
+        upperCase: false,
+        lowerCase: false,
+        digit: false,
+        specialChar: false,
+        length: false,
     });
 
     // useEffect(() => {
@@ -109,6 +120,21 @@ const PatientRegistrations = () => {
         setProfilePhoto(e.target.files[0]);
     };
 
+    useEffect(() => {
+        validatePassword(password);
+    }, [password]);
+
+    const validatePassword = (password) => {
+        const validations = {
+            upperCase: /[A-Z]/.test(password),
+            lowerCase: /[a-z]/.test(password),
+            digit: /[0-9]/.test(password),
+            specialChar: /[^A-Za-z0-9]/.test(password),
+            length: password.length >= 8 && password.length <= 16,
+        };
+        setPasswordValidations(validations);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -163,6 +189,18 @@ const PatientRegistrations = () => {
         if (!mainAddress.trim()) {
             validationErrors.mainAddress = 'Please enter your main address.';
         }
+
+        if (!password) {
+            validationErrors.password = 'Please enter your password.';
+        }
+
+        if (!confirmPassword) {
+            validationErrors.confirmPassword = 'Please confirm your password.';
+        }
+
+        if (password !== confirmPassword) {
+            validationErrors.confirmPassword = 'Passwords do not match.';
+        }
     
         if (!profilePhoto) {
             validationErrors.profilePhoto = 'Please upload your profile photo.';
@@ -193,6 +231,7 @@ const PatientRegistrations = () => {
           formData.append('patient_area_id', area);
           formData.append('patient_pincode', pincode);
           formData.append('patient_main_address', mainAddress);
+          formData.append('password', password);
           formData.append('demoimg', profilePhoto);
 
         try {
@@ -203,7 +242,8 @@ const PatientRegistrations = () => {
                 setIsSuccess(true);
                 setSuccessMessage('Registered successfully!');
                 setTimeout(() => {
-                    Router.push(`/Patientlogin`);
+                    localStorage.setItem('userEmail', email);
+                    Router.push(`/PatientLoginOTP`);
                 }, 1000);
             }
         } catch (error) {
@@ -214,6 +254,14 @@ const PatientRegistrations = () => {
         }
 
         setIsLoading(false);
+    };
+
+    const togglePasswordVisibility = () => {
+        setValues({ ...values, showPassword: !values.showPassword });
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setValues({ ...values, showConfirmPassword: !values.showConfirmPassword });
     };
 
     return (
@@ -350,6 +398,61 @@ const PatientRegistrations = () => {
                                         <textarea className="form-control" id="MainAddress" rows="3" placeholder="Enter your main address" value={mainAddress} onChange={(e) => setMainAddress(e.target.value)}></textarea>
                                         {errors.mainAddress && <div className="error-message" style={{color:'red'}}>{errors.mainAddress}</div>}
                                     </div>
+                                </div>
+
+                                <div className="row gx-3 mb-3">
+                                    <div className="col-md-6">
+                                    <label htmlFor="password" className="small mb-1">Password<span>*</span>:</label>
+                                    <input
+                                        type={values.showPassword ? 'text' : 'password'}
+                                        className="form-control"
+                                        id="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                    <span
+                                        className={`fas ${values.showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+                                        onClick={togglePasswordVisibility}
+                                        style={{ cursor: 'pointer' }}
+                                    ></span>
+                                    {errors.password && <div className="error-message" style={{color:'red'}}>{errors.password}</div>}
+                                    {password && (
+                                        <div>
+                                            <div style={{ color: passwordValidations.upperCase ? 'green' : 'red' }}>
+                                                {passwordValidations.upperCase ? 'Contains uppercase letter ✓' : 'Requires at least one uppercase letter'}
+                                            </div>
+                                            <div style={{ color: passwordValidations.lowerCase ? 'green' : 'red' }}>
+                                                {passwordValidations.lowerCase ? 'Contains lowercase letter ✓' : 'Requires at least one lowercase letter'}
+                                            </div>
+                                            <div style={{ color: passwordValidations.digit ? 'green' : 'red' }}>
+                                                {passwordValidations.digit ? 'Contains digit ✓' : 'Requires at least one digit'}
+                                            </div>
+                                            <div style={{ color: passwordValidations.specialChar ? 'green' : 'red' }}>
+                                                {passwordValidations.specialChar ? 'Contains special character ✓' : 'Requires at least one special character'}
+                                            </div>
+                                            <div style={{ color: passwordValidations.length ? 'green' : 'red' }}>
+                                                {passwordValidations.length ? 'Length between 8 and 16 characters ✓' : 'Requires length between 8 and 16 characters'}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                    <div className="col-md-6">
+                                    <label htmlFor="confirmPassword" className="small mb-1">Confirm Password<span>*</span>:</label>
+                                <input
+                                    type={values.showConfirmPassword ? 'text' : 'password'}
+                                    className="form-control"
+                                    id="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                                  <span
+                                    className={`fas ${values.showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+                                    onClick={toggleConfirmPasswordVisibility}
+                                    style={{ cursor: 'pointer' }}
+                                ></span>
+                                {errors.confirmPassword && <div className="error-message" style={{color:'red'}}>{errors.confirmPassword}</div>}
+
+                                </div>
                                 </div>
     
                                 <div className="mb-3">
