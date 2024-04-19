@@ -326,7 +326,7 @@ const PatientRegistrations = () => {
 
                                     </div>
                                     <div className="col-md-4">
-                                        <label className="small mb-1" htmlFor="city">City</label>
+                                        <label className="small mb-1" htmlFor="city">Area</label>
                                         <select className="form-control" id="city" onChange={(e) => setArea(e.target.value)}>
                                             <option value="">Select City</option>
                                             {cityList.map(city => (
