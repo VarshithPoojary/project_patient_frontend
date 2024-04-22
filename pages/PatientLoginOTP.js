@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
-import { getOtpByEmail } from '../actions/patientregistrationAction';
+import { getOtpByEmail } from '../actions/patientAction';
 
 const OTPPage = () => {
   const [otpDigits, setOtpDigits] = useState('');

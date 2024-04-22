@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import Router from 'next/router';
-import { Patientsignin } from '../actions/patientregistrationAction';
+import { Patientsignin } from '../actions/patientAction';
 
 const LoginForm = () => {
     const [values, setValues] = useState({
@@ -105,7 +105,7 @@ const LoginForm = () => {
                             <span className="button__text">Login</span>
                             <i className="button__icon fas fa-chevron-right"></i>
                         </button>
-                        <div className="text-center mt-3 login-link">
+                        <div className=" mt-3 login-link">
                             Don't have an account?{' '}
                             <div>
                                 <Link href="/PatientRegistration">

@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import Router from 'next/router';
-import { PatientRegistration } from '../actions/patientregistrationAction';
+import { PatientRegistration } from '../actions/patientAction';
 import { country_list } from '../actions/countryAction';
 import { state_list_by_country_id } from '../actions/stateAction';
 import { city_list_by_state_id } from '../actions/cityAction';
@@ -240,7 +240,7 @@ const PatientRegistrations = () => {
                 setErrorMessage(response.msg);
             } else {
                 setIsSuccess(true);
-                setSuccessMessage('Registered successfully!');
+                setSuccessMessage('Mail Sent To Your Email');
                 setTimeout(() => {
                     localStorage.setItem('userEmail', email);
                     Router.push(`/PatientLoginOTP`);

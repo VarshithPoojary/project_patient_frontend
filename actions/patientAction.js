@@ -70,3 +70,5 @@ export const authenticate = (data, callback) => {
     localStorage.setItem('user', JSON.stringify(data));
     callback();
 };
+
+
