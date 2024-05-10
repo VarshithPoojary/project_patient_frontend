@@ -21,6 +21,7 @@ const PatientRegistrations = () => {
     const [gender, setGender] = useState('');
     const [email, setEmail] = useState('');
     const [countryCode, setCountryCode] = useState('91'); 
+    const [patient_register_status, setPatient_register_status] = useState('false'); 
     const [address, setAddress] = useState('');
     const [country, setCountry] = useState('');
     const [state, setState] = useState('');
@@ -58,23 +59,7 @@ const PatientRegistrations = () => {
         length: false,
     });
 
-    // useEffect(() => {
-    //     // Reset the patient number in localStorage when the component mounts
-    //     localStorage.removeItem('lastPatientNumber');
-    // }, []);
-
-    // useEffect(() => {
-    //     // Get the last patient number from localStorage
-    //     const lastPatientNumber = localStorage.getItem('lastPatientNumber');
-    //     // If there's no last patient number, set it to P001
-    //     if (!lastPatientNumber) {
-    //         setPatientNumber('P001');
-    //         localStorage.setItem('lastPatientNumber', 'P001');
-    //     } else {
-    //         // Set the patient number to the last patient number
-    //         setPatientNumber(lastPatientNumber);
-    //     }
-    // }, []);
+    
 
     useEffect(() => {
         loadCountryDetail();  
@@ -139,9 +124,7 @@ const PatientRegistrations = () => {
         e.preventDefault();
         setIsLoading(true);
 
-        // const nextPatientNumber = `P${parseInt(patientNumber.substring(1)) + 1}`;
-        // setPatientNumber(nextPatientNumber);
-        // localStorage.setItem('lastPatientNumber', nextPatientNumber);
+        
 
         const validationErrors = {};
         if (!firstName.trim()) {
@@ -202,12 +185,13 @@ const PatientRegistrations = () => {
             validationErrors.confirmPassword = 'Passwords do not match.';
         }
     
-        if (!profilePhoto) {
-            validationErrors.profilePhoto = 'Please upload your profile photo.';
-        }
+        // if (!profilePhoto) {
+        //     validationErrors.profilePhoto = 'Please upload your profile photo.';
+        // }
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
+            alert(JSON.stringify(validationErrors))
             setIsLoading(false);
             setTimeout(() => {
                 setErrors({});
@@ -231,6 +215,7 @@ const PatientRegistrations = () => {
           formData.append('patient_area_id', area);
           formData.append('patient_pincode', pincode);
           formData.append('patient_main_address', mainAddress);
+          formData.append('patient_register_status', patient_register_status);
           formData.append('password', password);
           formData.append('demoimg', profilePhoto);
 
@@ -238,11 +223,15 @@ const PatientRegistrations = () => {
             const response = await PatientRegistration(formData);
             if (response.msg) {
                 setErrorMessage(response.msg);
+                setTimeout(() => {
+                    setErrorMessage('');
+                }, 1000);
             } else {
                 setIsSuccess(true);
                 setSuccessMessage('Mail Sent To Your Email');
                 setTimeout(() => {
                     localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userPhone', phoneNumber);
                     Router.push(`/PatientLoginOTP`);
                 }, 1000);
             }
@@ -458,7 +447,7 @@ const PatientRegistrations = () => {
                                 <div className="mb-3">
                                     <label className="small mb-1" htmlFor="ProfilePhoto">Profile Photo*</label>
                                     <input className="form-control" id="ProfilePhoto" type="file" onChange={onFileChange} />
-                                    {errors.profilePhoto && <div className="error-message"style={{color:'red'}}>{errors.profilePhoto}</div>}
+                                    {/* {errors.profilePhoto && <div className="error-message"style={{color:'red'}}>{errors.profilePhoto}</div>} */}
                                 </div>
                                 </div>
     

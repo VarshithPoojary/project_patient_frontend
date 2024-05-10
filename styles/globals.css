@@ -746,7 +746,7 @@ body {
 	border-radius: 10px;
 	box-shadow: 0 0 30px rgba(31, 45, 61, 0.125);
 	padding: 0px;
-	height: 400px;
+	height: 450px;
   }
 
   .patient-profile-container-card {
@@ -757,7 +757,7 @@ body {
 	/* padding: 20px; */
 	/* color: white; */
 	height: 100%;
-	margin-bottom: 40px;
+	margin-bottom: 0px;
   }
   .patient-profile-container-card2 {
 	width: 100%;
@@ -780,7 +780,7 @@ body {
 }
 
 .patient-profile-menu:hover {
-    color: #0095ff; /* Change text color on hover */
+    color: #0095ff; 
 }
 
 
@@ -907,6 +907,7 @@ body {
 	color: white;
 	cursor: pointer;
 	margin-left: 10px;
+	margin-top: -20px;
   }
   
   .patient-profile-edit-btn {
@@ -920,6 +921,39 @@ body {
   .patient-profile-edit-btn:hover, .patient-profile-back-btn:hover {
 	background-color: #3599ea;
   }
+
+  /* patient edit address */
+  .edit-address-form-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5); 
+	display: flex;
+	justify-content: center; 
+	align-items: center; 
+  }
+  
+  .edit-address-form {
+	background-color: rgb(234, 233, 233);
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	width: 300px;
+  }
+  
+  .close-btn {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 20px;
+	color: #333;
+  }
+  
   
   
 

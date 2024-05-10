@@ -5,36 +5,64 @@ import Router from 'next/router';
 import { resetPassword } from '../actions/forgotpasswordAction';
 
 const ResetPasswordPage = () => {
-  const [adminOtpMobileNo, setAdminOtpMobileNo] = useState(''); 
-  const [newPassword, setNewPassword] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const[adminOtp,setAdminOtp]=useState('');
+  const [errors, setErrors] = useState({
+   password:'',
+   confirmPassword:''
+});
   
 
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
-    try {
-      const response = await resetPassword(adminOtpMobileNo, newPassword, confirmPassword, adminOtp);
-      console.log('Reset Password Response:', response); 
-      if (response.message) {
-        setMessage(response.message); 
-          setAdminOtpMobileNo('');
-        setNewPassword('');
-        setConfirmPassword('');
-        setAdminOtp('');
-      
-        Router.push('/login');
+    const validationErrors = {};
+  
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!password) {
+      validationErrors.password = 'Please enter your new password.';
+    } else if (!passwordRegex.test(password)) {
+      validationErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be at least 8 characters long';
+    } else if (!confirmPassword) {
+      validationErrors.confirmPassword = 'Please enter confirm password.';
+    } else if (password !== confirmPassword) {
+      validationErrors.confirmPassword = 'Passwords do not match.';
+    } 
+  
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setTimeout(() => 
+        setErrors(''),
+       2000);
+      return;
+    }
+  
+    const phone_number = localStorage.getItem('userPhone');
+        try {
+          const passwordData = {
+            patient_phone_number: phone_number,
+            password: password,
+          };
+      const response = await resetPassword(passwordData);
+      if (response.error) {
+        setErrorMessage(response.error);
       } else {
-        setError('Failed to reset password'); 
-      }
+        setMessage('Password changed successfully');
+        setPassword('');
+        setConfirmPassword('');
+        localStorage.removeItem('userPhone');
+        setTimeout(() => Router.push('/Patientlogin'), 1000);
+      } 
     } catch (err) {
       console.error('Error resetting password:', err); 
-      setError('Failed to reset password');
+      setErrorMessage('Failed to reset password');
     }
   };
+  
+  
   return (
     <>
       <Head>
@@ -44,55 +72,52 @@ const ResetPasswordPage = () => {
       </Head>
 
       <div id="wrapper">
-        <div className="content-page">
-          <div className="content">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-12">
-                  <div className="card mb-4" style={{ width: "500px", marginTop: "70px" }}>
+       
+         
+      <div className="card mb-4" style={{ width: "500px", margin: "auto", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+  
+
                     <div className="card-header">Reset Password</div>
                     <div className="card-body">
                       <form onSubmit={handleResetPassword}>
-                        <div className="mb-3">
-                          <label htmlFor="new_password" className="form-label">New Password</label>
-                          <input
-                            className="form-control"
-                            id="new_password"
-                            type="password"
-                            placeholder="Enter New Password"
-                            name="new_password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="mb-3">
-                          <label htmlFor="confirm_password" className="form-label">Confirm Password</label>
-                          <input
-                            className="form-control"
-                            id="confirm_password"
-                            type="password"
-                            placeholder="Confirm New Password"
-                            name="confirm_password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                          />
-                        </div>
+                      <div className="mb-3">
+    <label htmlFor="password" className="form-label">New Password</label>
+    <input
+        className="form-control"
+        id="password"
+        type="password"
+        placeholder="Enter New Password"
+        name="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+    />
+      {errors.password && <div className="error-message" style={{color:'red'}}>{errors.password}</div>}
+</div>
+<div className="mb-3">
+    <label htmlFor="confirm_password" className="form-label">Confirm Password</label>
+    <input
+        className="form-control"
+        id="confirm_password"
+        type="password"
+        placeholder="Confirm New Password"
+        name="confirm_password"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+    />
+     {errors.confirmPassword && <div className="error-message" style={{color:'red'}}>{errors.confirmPassword}</div>}
+</div>
+
                         <button className="btn btn-primary" type="submit" style={{ backgroundColor: "#87CEFA", borderColor: "#87CEFA" }}>Update</button>
                       </form>
                       <div className="mt-3 text-center">
-                        <Link href="/login">Login</Link>
+                        <Link href="/Patientlogin">Login</Link>
                       </div>
                       {message && <div className="alert alert-success mt-3">{message}</div>}
-                      {error && <div className="alert alert-danger mt-3">{error}</div>}
+                      {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+         
+       
       </div>
     </>
   );

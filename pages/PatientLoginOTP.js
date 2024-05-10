@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
-import { getOtpByEmail } from '../actions/patientAction';
+import { getOtpByEmail, patient_registration_update } from '../actions/patientAction';
+import { resendOTP } from '../actions/forgotpasswordAction';
 
 const OTPPage = () => {
   const [otpDigits, setOtpDigits] = useState('');
@@ -13,24 +14,46 @@ const OTPPage = () => {
     setOtpDigits(e.target.value);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Submitting form...');
-
-    const userEmail = localStorage.getItem('userEmail');
-
+  
+    const userPhone = localStorage.getItem('userPhone');
+  
     try {
-      const response = await getOtpByEmail(userEmail);
+      const response = await getOtpByEmail(userPhone);
       const user = response;
-
+  
       if (user.patient_otp === otpDigits) { 
         setMessage('OTP verified successfully');
         setError('');
-        localStorage.removeItem('userEmail');
-        Router.push('/Patientlogin');
+  
+        const registration_data = {
+          patient_phone_number: userPhone,
+          patient_register_status: true,
+        };
+  
+        try {
+          const updateResponse = await patient_registration_update(registration_data); 
+          if (updateResponse.error) {
+            setError(updateResponse);
+            // setValues({ ...values, error: updateResponse.error });
+          } else {
+            localStorage.removeItem('userPhone');
+            Router.push('/Patientlogin');
+          }
+        } catch (error) {
+          console.error('Error updating registration status:', error);
+          setError('Error updating registration status');
+          // setValues({ ...values, error: 'Error updating registration status', loading: false });
+        }
       } else {
         setMessage('');
         setError('Wrong OTP');
+        setTimeout(() => {
+          setError('');
+        }, 1000);
       }
     } catch (err) {
       console.error('Failed to verify OTP:', err);
@@ -38,6 +61,37 @@ const OTPPage = () => {
       setError('Failed to verify OTP');
     }
   };
+
+
+  const handleResendOTP = async (e) => {
+    e.preventDefault();
+    const userPhone = localStorage.getItem('userPhone');
+    try {
+      const response = await resendOTP(userPhone);
+      if(response.error)
+        {
+          setError(response.error);
+          setTimeout(() => {
+            setError('');
+          }, 1000);
+          
+        }
+        else{
+          setMessage("OTP sent to you mail")
+          setTimeout(() => {
+            setMessage("")
+          }, 1000);
+          
+        }
+    } catch (err) {
+      setMessage('');
+      setError('Failed to generate OTP');
+    }
+  };
+
+
+  
+  
 
   return (
     <>
@@ -80,10 +134,10 @@ const OTPPage = () => {
             {message && <div className="alert alert-success mt-1">{message}</div>}
             {error && <div className="alert alert-danger mt-1">{error}</div>}
             <div className="mt-9 text-center" style={{ marginRight: "20%" }}>
-              <Link href="/Patientlogin">Back</Link>
-              <span>&nbsp;|&nbsp;</span>
-              <Link href="/ResendOTP">Resend OTP</Link>
-            </div>
+              <Link href="/PatientRegistration">Back</Link>
+              {/* <span>&nbsp;|&nbsp;</span> */}
+              <div onClick={handleResendOTP} style={{cursor: 'pointer'}}>Resend OTP</div>
+                          </div>
           </div>
           <div className="screen__background">
             <span className="screen__background__shape screen__background__shape4"></span>

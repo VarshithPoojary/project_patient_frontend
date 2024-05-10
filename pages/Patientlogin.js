@@ -105,6 +105,9 @@ const LoginForm = () => {
                             <span className="button__text">Login</span>
                             <i className="button__icon fas fa-chevron-right"></i>
                         </button>
+                        <Link href="/Forgotpassword">
+                                    <a>Forgot Password?</a>
+                                </Link>
                         <div className=" mt-3 login-link">
                             Don't have an account?{' '}
                             <div>
@@ -112,7 +115,7 @@ const LoginForm = () => {
                                     <a>Register Here</a>
                                 </Link>
                             </div>
-                            {error && <div className="alert alert-danger mt-3">{error}</div>}
+                            {error && <div className="alert alert-danger mt-1">{error}</div>}
                 {isSuccess && <div className="success-message">{successMessage}</div>}
                         </div>
                     </form>
