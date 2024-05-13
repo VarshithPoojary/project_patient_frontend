@@ -49,28 +49,22 @@ const Users = () => {
                     <div className="content">
                         <div className="container-fluid">
 
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col-12">
                                     <div className="page-title-box">
-                                        {/* <div className="page-title-right">
-
-                                            <ol className="breadcrumb m-0">
-                                                <li className="breadcrumb-item">Employee</li>
-                                                <li className="breadcrumb-item active">Dashboard</li>
-                                            </ol>
-                                        </div>
-                                        <h4 className="page-title">Dashboard</h4> */}
+                                        
+                                        <h4 className="page-title">Dashboard</h4>
 
                                         <div className="clearfix"></div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
 
 
 
-                            <div className="row">
-                                {/* <div className="col-xs-12 col-md-6 col-lg-6 col-xl-3">
+                            {/* <div className="row">
+                                <div className="col-xs-12 col-md-6 col-lg-6 col-xl-3">
                  
 
                     <div className="card-box tilebox-one" style={{ height: '128px', color:'black'}}>
@@ -79,8 +73,8 @@ const Users = () => {
               <h4 className="mb-3" data-plugin="">{labCount}</h4>
                  </div>
           
-      </div>   */}
-                                {/* <div className="col-xs-12 col-md-6 col-lg-6 col-xl-3">
+      </div>  
+                                <div className="col-xs-12 col-md-6 col-lg-6 col-xl-3">
                  
 
                  <div className="card-box tilebox-one" style={{ height: '128px', color:'black'}}>
@@ -89,8 +83,8 @@ const Users = () => {
            <h4 className="mb-3" data-plugin="">{logsCount}</h4>
               </div>
        
-   </div>  */}
-                                {/* <div className="col-xs-12 col-md-6 col-lg-6 col-xl-3">
+   </div> 
+                                <div className="col-xs-12 col-md-6 col-lg-6 col-xl-3">
                  
 
                  <div className="card-box tilebox-one" style={{ height: '128px', color:'black'}}>
@@ -119,10 +113,10 @@ const Users = () => {
            <h4 className="mb-3" data-plugin="">{declineCount}</h4>
               </div>
        
-   </div>   */}
+   </div>  
 
 
-                            </div>
+                            </div> */}
 
 
                         </div>
