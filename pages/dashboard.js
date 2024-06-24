@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 
 const Signup = () => {
   return (
-    <div id="wrapper">
+    <div id="wrapper" >
       <Head>
         <title>Dashboard</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />

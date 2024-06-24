@@ -32,7 +32,7 @@ export const patient_forgot_Password_OTP = patient_phone_number => {
 //   };
 
 export const resendOTP = patient_phone_number => {
-  return fetch(`${API}/resendOTP`, {
+  return fetch(`${API}/resendPatientOTP`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -48,7 +48,7 @@ export const resendOTP = patient_phone_number => {
 
 
 export const resetPassword = passwordData => {
-  return fetch(`${API}/resetPassword`, {
+  return fetch(`${API}/resetPatientPassword`, {
       method: 'POST',
       headers: {
           Accept: 'application/json',

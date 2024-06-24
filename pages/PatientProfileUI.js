@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
+import Head from 'next/head';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -13,9 +14,9 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-import {BiCalendar, BiUser, BiListUl, BiCart,  BiEdit } from 'react-icons/bi'; 
+import {BiCalendar, BiUser, BiListUl, BiCart,  BiEdit, BiCreditCard, BiLock } from 'react-icons/bi'; 
 import {GiMedicines} from "react-icons/gi";
-import {FaNotesMedical, FaSquareFull} from "react-icons/fa";
+import {FaNotesMedical, FaSquareFull,FaHandsHelping,FaShoppingCart,FaHome,FaUserMd} from "react-icons/fa";
 import {FiHome,FiLogOut, FiMapPin} from "react-icons/fi";
 import "react-pro-sidebar/dist/css/styles.css";
 import Topbar from './topbar';
@@ -26,6 +27,7 @@ import { state_list, state_list_by_country_id } from '../actions/stateAction';
 import { city_list,city_list_by_state_id } from '../actions/cityAction';
 import { banner_list } from '../actions/bannerAction';
 import { timers } from 'jquery';
+import { Button } from 'react-bootstrap';
 
 
 
@@ -335,6 +337,14 @@ const renderEditButton = () => {
 
 return (
   <section className="patient-profile">
+    
+       <Head>
+        <title>Profile</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Profil' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
+      <Topbar/>
     <div className="patient-top-section">
       {/* <Topbar/> */}
       {/* <img src={values.bannerList[0]} alt="Top Image" className="patient-top-image" /> */}
@@ -371,17 +381,21 @@ return (
         {/* <SidebarContent className="patient-profile-container-scroll"> */}
           <Scrollbars  className="patient-profile-container-scroll">
             <Menu iconShape="round" >
-            <MenuItem icon={<FiHome />} title="Dashboard" className='patient-profile-menu'>
+            <MenuItem icon={<FaHome />} title="Dashboard" className='patient-profile-menu'>
       <Link href='/dashboard'><span>Dashboard</span></Link>
     </MenuItem>
-    <MenuItem icon={<BiUser />} title="Specialist" className='patient-profile-menu'>
+    <MenuItem icon={<FaUserMd />} title="Specialist" className='patient-profile-menu'>
       <Link href='/Admin/viewAdminList'><span>Specialist</span></Link>
     </MenuItem>
     <MenuItem icon={<BiListUl />} title="Appointment" className='patient-profile-menu'>Appointment</MenuItem>
     <MenuItem icon={<BiCalendar />} title="Slot" className='patient-profile-menu'>View Slot</MenuItem>
     <MenuItem icon={<GiMedicines />} title="Product" className='patient-profile-menu'>View Product</MenuItem>
     <MenuItem icon={<FaNotesMedical />} title="Description" className='patient-profile-menu'>View Description</MenuItem>
+    <MenuItem icon={<BiCreditCard />} title="Description" className='patient-profile-menu'>Payment Details</MenuItem>
+    <MenuItem icon={<BiLock />} title="Description" className='patient-profile-menu'>Security</MenuItem>
     <MenuItem icon={<BiCart />} title="Order" className='patient-profile-menu'>Your Order</MenuItem>
+    {/* <MenuItem icon={<FaShoppingCart />} title="Order" className='patient-profile-menu'>Cart</MenuItem> */}
+    <MenuItem icon={<FaHandsHelping />} title="Order" className='patient-profile-menu'>Help</MenuItem>
     <MenuItem icon={<FiLogOut />} title="Logout" className='patient-profile-menu' onClick={handleLogout}>
     <span>Logout</span>
     </MenuItem>

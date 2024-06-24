@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import Router from 'next/router';
+import TopBarHome from './homeTopbar.js'
 import { PatientRegistration } from '../actions/patientAction';
 import { country_list } from '../actions/countryAction';
 import { state_list_by_country_id } from '../actions/stateAction';
@@ -28,6 +29,8 @@ const PatientRegistrations = () => {
     const [area, setArea] = useState('');
     const [pincode, setPincode] = useState('');
     const [mainAddress, setMainAddress] = useState('');
+    const [lattitude, setLattitude] = useState('');
+    const [longitude, setLongitude] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePhoto, setProfilePhoto] = useState(null);
@@ -48,6 +51,8 @@ const PatientRegistrations = () => {
         area: '',
         pincode: '',
         mainAddress: '',
+        lattitude: '',
+        longitude: '',
         patient_password:'',
         profilePhoto: '', 
     });
@@ -173,6 +178,14 @@ const PatientRegistrations = () => {
             validationErrors.mainAddress = 'Please enter your main address.';
         }
 
+        if(!lattitude.trim()){
+            validationErrors.lattitude = 'Please enter your lattitude.';
+        }
+
+        if(!longitude.trim()){
+            validationErrors.longitude = 'Please enter your longitude.';
+        }
+
         if (!password) {
             validationErrors.password = 'Please enter your password.';
         }
@@ -191,7 +204,7 @@ const PatientRegistrations = () => {
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
-            alert(JSON.stringify(validationErrors))
+            // alert(JSON.stringify(validationErrors))
             setIsLoading(false);
             setTimeout(() => {
                 setErrors({});
@@ -214,6 +227,8 @@ const PatientRegistrations = () => {
           formData.append('patient_state_id', state);
           formData.append('patient_area_id', area);
           formData.append('patient_pincode', pincode);
+          formData.append('patient_latitude', lattitude);
+          formData.append('patient_longitude', longitude);
           formData.append('patient_main_address', mainAddress);
           formData.append('patient_register_status', patient_register_status);
           formData.append('password', password);
@@ -230,16 +245,16 @@ const PatientRegistrations = () => {
                 setIsSuccess(true);
                 setSuccessMessage('Mail Sent To Your Email');
                 setTimeout(() => {
-                    localStorage.setItem('userEmail', email);
                     localStorage.setItem('userPhone', phoneNumber);
                     Router.push(`/PatientLoginOTP`);
                 }, 1000);
             }
         } catch (error) {
             console.error('Error:', error);
-            setTimeout(() => {
                 setErrorMessage('Error saving data. Please try again.');
-            }, 1000);
+                setTimeout(() => {
+                    setErrorMessage('');
+                }, 1000);
         }
 
         setIsLoading(false);
@@ -254,18 +269,18 @@ const PatientRegistrations = () => {
     };
 
     return (
-        <>
+        <div style={{width:'100%', backgroundColor:'white'}}>
             <Head>
                 <title>Patient Registration</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                 <meta name="title" content="Patient Registration Form" />
                 <link rel="icon" href="/images/title_logo.png" />
             </Head>
-
-            <div className="container mt-4">
-                <div className="card mb-4" style={{ width: '600px', boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%)' }}>
-                    <h4 className="mb-3 text-center">Registration Form</h4>
-                    <p className="mb-3 text-center">Please fill in your details to register as a new patient.</p>
+            <TopBarHome/>
+            <div className="container mt-4" style={{width:'100%'}}>
+                <div className="card mb-4" style={{ width: '80%', boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%)', marginTop:'80px'}}>
+                    <h2 className="mb-3 text-center" style={{fontSize: '2.5em',color: '#7c7c7c',textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',margin: '20px',borderRadius: '5px'}}>Registration Form</h2>
+                    <p className="mb-2 text-center">Please fill in your details to register as a new patient.</p>
 
                     <div className="card-body" style={{ padding: '20px' }}>
                         <form onSubmit={handleSubmit}>
@@ -276,13 +291,13 @@ const PatientRegistrations = () => {
                             <div className="form-group">
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="FirstName">First Name*</label>
+                                        <label className="big mb-1" htmlFor="FirstName">First Name<span style={{color:'red'}}>*</span> :</label>
                                         <input className="form-control" id="FirstName" type="text" placeholder="Enter your first name" value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)} />
                                         {errors.firstName && <div className="error-message" style={{color:'red'}}>{errors.firstName}</div>}
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="LastName">Last Name*</label>
+                                        <label className="big mb-1" htmlFor="LastName">Last Name<span style={{color:'red'}}>*</span> :</label>
                                         <input className="form-control" id="LastName" type="text" placeholder="Enter your last name" value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}/>
                                         {errors.lastName && <div className="error-message" style={{color:'red'}}>{errors.lastName}</div>}
@@ -291,13 +306,13 @@ const PatientRegistrations = () => {
     
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="CountryCode">Country Code*</label>
+                                        <label className="big mb-1" htmlFor="CountryCode">Country Code<span style={{color:'red'}}>*</span> :</label>
                                         <select className="form-control" id="CountryCode" value={countryCode} onChange={(e) => setCountryCode(e.target.value)}>
-                                            <option value="India">India</option>
+                                            <option value="India">India(+91)</option>
                                         </select>
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="Phone">Phone Number*</label>
+                                        <label className="big mb-1" htmlFor="Phone">Phone Number<span style={{color:'red'}}>*</span> :</label>
                                         <input className="form-control" id="Phone" type="tel" placeholder="Enter your phone number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}  />
                                         {errors.phoneNumber && <div className="error-message" style={{color:'red'}}>{errors.phoneNumber}</div>}
                                     </div>
@@ -305,12 +320,12 @@ const PatientRegistrations = () => {
     
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="Dob">Date Of Birth*</label>
+                                        <label className="big mb-1" htmlFor="Dob">Date Of Birth<span style={{color:'red'}}>*</span> :</label>
                                         <input className="form-control" id="Dob" type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
                                         {errors.dateOfBirth && <div className="error-message" style={{color:'red'}}>{errors.dateOfBirth}</div>}
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="small mb-1">Gender*</label><br />
+                                        <label className="big mb-1">Gender<span style={{color:'red'}}>*</span> :</label><br />
                                         <div className="form-check form-check-inline">
                                             <input className="form-check-input" type="radio" id="male" name="gender" value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
                                             <label className="form-check-label" htmlFor="male">Male</label>
@@ -327,22 +342,24 @@ const PatientRegistrations = () => {
                                     </div>
                                 </div>
     
-                                <div className="mb-3">
-                                    <label className="small mb-1" htmlFor="Email">Email*</label>
+                                <div className="row gx-3 mb-3">
+                                <div className="col-md-6">
+                                    <label className="big mb-1" htmlFor="Email">Email<span style={{color:'red'}}>*</span> :</label>
                                     <input className="form-control" id="Email" type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} />
                                     {errors.email && <div className="error-message" style={{color:'red'}}>{errors.email}</div>}
                                 </div>
     
-                                <div className="mb-3">
-                                    <label className="small mb-1" htmlFor="Address">Address*</label>
+                                <div className="col-md-6">
+                                    <label className="big mb-1" htmlFor="Address">Address<span style={{color:'red'}}>*</span> :</label>
                                     <textarea className="form-control" id="Address" rows="3" placeholder="Enter your address"value={address} onChange={(e) => setAddress(e.target.value)}></textarea>
                                     {errors.address && <div className="error-message" style={{color:'red'}}>{errors.address}</div>}
 
                                 </div>
+                                </div>
     
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-4">
-                                    <label className="small mb-1" htmlFor="country">Country</label>
+                                    <label className="big mb-1" htmlFor="country">Country<span style={{color:'red'}}>*</span> :</label>
                             <select className="form-control" id="country" onChange={(e) => handleCountryChange(e.target.value)}>
                                 <option value="">Select Country</option>
                                 {countryList.map(country => (
@@ -352,7 +369,7 @@ const PatientRegistrations = () => {
                             {errors.country && <div className="error-message" style={{color:'red'}}>{errors.country}</div>}
                                     </div>
                                     <div className="col-md-4">
-                                    <label className="small mb-1" htmlFor="state">State</label>
+                                    <label className="big mb-1" htmlFor="state">State<span style={{color:'red'}}>*</span> :</label>
                             <select className="form-control" id="state" onChange={(e) => handleStateChange(e.target.value)}>
                                 <option value="">Select State</option>
                                 {stateDetail.map(state => (
@@ -363,7 +380,7 @@ const PatientRegistrations = () => {
 
                                     </div>
                                     <div className="col-md-4">
-                                        <label className="small mb-1" htmlFor="city">Area</label>
+                                        <label className="big mb-1" htmlFor="city">Area<span style={{color:'red'}}>*</span> :</label>
                                         <select className="form-control" id="city" onChange={(e) => setArea(e.target.value)}>
                                             <option value="">Select City</option>
                                             {cityList.map(city => (
@@ -378,12 +395,12 @@ const PatientRegistrations = () => {
     
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="Pincode">Pincode*</label>
+                                        <label className="big mb-1" htmlFor="Pincode">Pincode<span style={{color:'red'}}>*</span> :</label>
                                         <input className="form-control" id="Pincode" type="text" placeholder="Enter your pincode" value={pincode} onChange={(e) => setPincode(e.target.value)}  />
                                         {errors.pincode && <div className="error-message" style={{color:'red'}}>{errors.pincode}</div>}
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="MainAddress">Main Address*</label>
+                                        <label className="big mb-1" htmlFor="MainAddress">Main Address<span style={{color:'red'}}>*</span> :</label>
                                         <textarea className="form-control" id="MainAddress" rows="3" placeholder="Enter your main address" value={mainAddress} onChange={(e) => setMainAddress(e.target.value)}></textarea>
                                         {errors.mainAddress && <div className="error-message" style={{color:'red'}}>{errors.mainAddress}</div>}
                                     </div>
@@ -391,7 +408,20 @@ const PatientRegistrations = () => {
 
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
-                                    <label htmlFor="password" className="small mb-1">Password<span>*</span>:</label>
+                                        <label className="big mb-1" htmlFor="Latitude">Lattitude<span style={{color:'red'}}>*</span> :</label>
+                                        <input className="form-control" id="lattitude" type="text" placeholder="Enter your lattitude" value={lattitude} onChange={(e) => setLattitude(e.target.value)}  />
+                                        {errors.lattitude && <div className="error-message" style={{color:'red'}}>{errors.lattitude}</div>}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label className="big mb-1" htmlFor="Longitude">Longitude<span style={{color:'red'}}>*</span> :</label>
+                                        <input className="form-control" id="Longitude" rows="3" placeholder="Enter your Longitude" value={longitude} onChange={(e) => setLongitude(e.target.value)}></input>
+                                        {errors.longitude && <div className="error-message" style={{color:'red'}}>{errors.longitude}</div>}
+                                    </div>
+                                </div>
+
+                                <div className="row gx-3 mb-3">
+                                    <div className="col-md-6">
+                                    <label htmlFor="password" className="big mb-1">Password<span style={{color:'red'}}>*</span> :</label>
                                     <input
                                         type={values.showPassword ? 'text' : 'password'}
                                         className="form-control"
@@ -426,7 +456,7 @@ const PatientRegistrations = () => {
                                     )}
                                 </div>
                                     <div className="col-md-6">
-                                    <label htmlFor="confirmPassword" className="small mb-1">Confirm Password<span>*</span>:</label>
+                                    <label htmlFor="confirmPassword" className="big mb-1">Confirm Password<span style={{color:'red'}}>*</span> :</label>
                                 <input
                                     type={values.showConfirmPassword ? 'text' : 'password'}
                                     className="form-control"
@@ -445,7 +475,7 @@ const PatientRegistrations = () => {
                                 </div>
     
                                 <div className="mb-3">
-                                    <label className="small mb-1" htmlFor="ProfilePhoto">Profile Photo*</label>
+                                    <label className="big mb-1" htmlFor="ProfilePhoto">Profile Photo</label>
                                     <input className="form-control" id="ProfilePhoto" type="file" onChange={onFileChange} />
                                     {/* {errors.profilePhoto && <div className="error-message"style={{color:'red'}}>{errors.profilePhoto}</div>} */}
                                 </div>
@@ -473,7 +503,7 @@ const PatientRegistrations = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

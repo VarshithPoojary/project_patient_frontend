@@ -1,59 +1,153 @@
-import React from 'react';
-import "../styles/Home.module.css"
+import React, { useEffect, useState } from 'react';
+import Router from 'next/router';
+import { specialist_list } from '../actions/specialistAction';
 
-// Define a functional component for the homepage
-function HomePage() {
+const HomeContent = () => {
+  const [values, setValues] = useState({
+    specialists: [],
+    loading: false,
+    error: ''
+  });
+
+  const { specialists, loading, error } = values;
+
+  useEffect(() => {
+    loadSpecialists();
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const loadSpecialists = () => {
+    specialist_list()
+      .then(specialistData => {
+        if (specialistData.error) {
+          console.log(specialistData.error);
+        } else {
+          setValues(values => ({
+            ...values,
+            specialists: specialistData.admin_specialist_type_list,
+          }));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setValues(values => ({ ...values, error: 'Error: Network request failed', loading: false }));
+      });
+  };
+
+  const handleViewDoctors = (specialistName) => {
+    Router.push({
+      pathname: '/Home/homeDoctorView',
+      query: {
+        specialist_type_name: specialistName,
+      }
+    });
+  };
+
+  const handleScroll = () => {
+    const specialistSection = document.getElementById('specialist');
+    const specialistImage = document.querySelector('.home-specialist-image');
+    if (specialistSection && specialistImage) {
+      const sectionTop = specialistSection.offsetTop;
+      const sectionBottom = sectionTop + specialistSection.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if (scrollTop > sectionTop - viewportHeight && scrollTop < sectionBottom) {
+        specialistImage.classList.add('visible');
+        window.removeEventListener('scroll', handleScroll);
+      }
+    }
+  };
+
   return (
-    
-    <div  className="container" style={{ width:'100%'/*, margin: '0 auto'*/, padding: '80px', fontFamily: 'Arial, sans-serif'}}>
+    <div className="homeSection-container">
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-  
-    <section id="services" style={{ marginBottom: '40px', width:'100%',paddingTop:'0px'}}>
-      <h2>Our Services</h2>
-      <div style={{ backgroundColor: '#f9f9f9', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
-        <h3>Primary Care</h3>
-        <p>At HealthCare Plus, we believe in providing comprehensive primary care services to individuals and families of all ages. Our dedicated team of healthcare professionals is committed to delivering personalized and compassionate care to help you achieve and maintain optimal health and well-being.</p>
-      </div>
-      <div style={{ backgroundColor:'#f9f9f9', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
-        <h3>Specialty Care</h3>
-        <p>At Healthcare Plus, we understand that some medical conditions require specialized expertise and tailored treatment approaches. That's why we offer specialized care services to address complex medical conditions with precision and compassion..</p>
-      </div>
-      <div style={{ backgroundColor:'#f9f9f9', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
-        <h3>Emergency Care</h3>
-        <p> we understand the importance of immediate access to high-quality emergency medical services.You can trust our dedicated team to provide you with 24/7 emergency medical services.</p>
-      </div>
-    </section>
-   
-    <section id="about" style={{marginBottom:'40px',backgroundColor:'#EBFBFF',height:'500px', width: '1250px',padding:'60px 0px'}}>
-      
-      <h2>About Us</h2>
-    {/*  <div class="col-md-5" style={{width:'400px',height:'400px'}}>
-      <div class="cardi border-0 who-card" style={{width:'400px',height:'400px'}}>
-       <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/whychoseapollo_ah.webp" class="card-img " alt="..." style={{overflow:'clip',width:'400px',height:'400px'}}/> 
-       </div>
-    </div>*/}
-      <div style={{ borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
-      <p>We are dedicated to providing high-quality healthcare services to our community. Our team of experienced healthcare professionals is committed to your well-being.</p>
-      <h3 className="subsection-title">Why Choose Us?</h3>
-  <ul className="choose-us-list">
-    <li>Experienced and compassionate healthcare providers dedicated to your well-being.</li>
-    <li>Convenient appointment scheduling and flexible hours to accommodate your busy lifestyle.</li>
-    <li>State-of-the-art facilities equipped with the latest technology for accurate diagnosis and treatment.</li>
-    <li>A commitment to excellence in patient care, safety, and satisfaction.</li>
-  </ul>
-  </div>
-    </section>
-    <section    id="contact" style={{ marginBottom:'160px',backgroundColor:'',width:'100%'}}>
+
+      <section id="services" className="homeSection-section homeSection-services">
+      <h2>Why Choose Us?</h2>
+      <p>Best way to get Appointment</p>
+      <div className="home-specialists-container">
+      <div className="home-services-image">
+            <img src="/images/homeServices.png" alt="services" />
+          </div>
+      <div className="home-services-grid">
+            <div className="home-services-card">
+              <img src="/images/hospital-icon1.png" alt="Hospitals" />
+              <h3>73+</h3>
+              <p>Total Hospital</p>
+            </div>
+            <div className="home-services-card">
+              <img src="/images/hospital-icon2.png" alt="Clinics" />
+              <h3>400+</h3>
+              <p>Total Clinik </p>
+            </div>
+            <div className="home-services-card">
+              <img src="/images/doctor-icon.png" alt="Doctors" />
+              <h3>1,100+</h3>
+              <p>Doctors across India</p>
+            </div>
+            <div className="home-services-card">
+              <img src="/images/patient-icon.png" alt="Pharmacies" />
+              <h3>5,000+</h3>
+              <p>Registered Patients across India</p>
+            </div>
+          </div>
+         
+        </div>
+      </section>
+
+      <section id="specialist" className="homeSection-section homeSection-specialist">
+        <h2>Explore our Specialists</h2>
+        <p>We will Provide Best Specialists</p>
+        <div className="home-specialists-container">
+          <div className="home-specialists-grid">
+            {specialists.map((specialist, index) => (
+              <div
+                key={index}
+                className="home-specialist-card"
+                onClick={() => handleViewDoctors(specialist.specialist_type_name)}
+                style={{ cursor: 'pointer' }}
+              >
+                <img src={specialist.admin_icon} alt={specialist.specialist_type_name} />
+                <h6>{specialist.specialist_type_name}</h6>
+              </div>
+            ))}
+          </div>
+          <div className="home-specialist-image">
+            <img src="/images/specalistImg.png" alt="Specialists" layout="fill" objectFit="cover" />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="homeSection-card">
+          <h3>Emergency Care</h3>
+          <p>We understand the importance of immediate access to high-quality emergency medical services. You can trust our dedicated team to provide you with 24/7 emergency medical services.</p>
+        </div>
+      </section>
+
+      <section id="about" className="homeSection-section homeSection-about">
+        <h2>About Us</h2>
+        <div className="homeSection-card">
+          <p>We are dedicated to providing high-quality healthcare services to our community. Our team of experienced healthcare professionals is committed to your well-being.</p>
+          <h3 className="homeSection-subsection-title">Why Choose Us?</h3>
+          <ul className="homeSection-choose-us-list">
+            <li>Experienced and compassionate healthcare providers dedicated to your well-being.</li>
+            <li>Convenient appointment scheduling and flexible hours to accommodate your busy lifestyle.</li>
+            <li>State-of-the-art facilities equipped with the latest technology for accurate diagnosis and treatment.</li>
+            <li>A commitment to excellence in patient care, safety, and satisfaction.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="contact" className="homeSection-section homeSection-contact">
         <h2>Contact Us</h2>
         <p>Get in touch with us to schedule an appointment or inquire about our services.</p>
-        <p>Phone: <span style={{color: 'blue'}}>123-456-7890</span></p>
-       <p>Email: <span style={{color: 'blue'}}>info@healthcareplus.com</span></p>
-      
+        <p>Phone: <span className="homeSection-contact-info">123-456-7890</span></p>
+        <p>Email: <span className="homeSection-contact-info">info@healthcareplus.com</span></p>
       </section>
-  
-  </div>
-    
+    </div>
   );
 }
 
-export default HomePage;
+export default HomeContent;

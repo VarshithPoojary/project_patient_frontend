@@ -36,7 +36,7 @@ export const patient_list = () => {
 
 export const getOtpByEmail = otpData => {
     var phone={"patient_phone_number":otpData};
-    return fetch(`${API}/getOtpByEmail`, {
+    return fetch(`${API}/getPatientOtpByEmail`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',

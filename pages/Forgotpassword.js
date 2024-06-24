@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import TopBarHome from './homeTopbar.js';
 import { patient_forgot_Password_OTP } from '../actions/forgotpasswordAction';
 import Router from 'next/router';
+
 
 const ForgotPasswordPage = () => {
   const [patient_phone_number, setPatient_phone_number] = useState('');
@@ -45,7 +47,7 @@ const ForgotPasswordPage = () => {
     <meta name="title" content='Forgot Password' />
       <link rel="icon" href="/images/title_logo.png" />
     </Head>
-
+    <TopBarHome/>
 
       <div id="wrapper">
         

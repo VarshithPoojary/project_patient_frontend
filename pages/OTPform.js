@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
+import TopBarHome from './homeTopbar.js';
 import { getOtpByEmail, patient_registration_update } from '../actions/patientAction';
 import { resendOTP } from '../actions/forgotpasswordAction';
 
@@ -83,7 +84,7 @@ const OTPPage = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="title" content="Admin_Profile" />
       </Head>
-
+      <TopBarHome/>
       <div className="container">
         <div className="screen">
           <div className="screen__content">

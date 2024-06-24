@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FiCamera } from 'react-icons/fi'; 
+import Head from 'next/head';
 import Router from 'next/router';
 import { country_list } from '../actions/countryAction';
 import { state_list_by_country_id,state_list } from '../actions/stateAction';
@@ -195,13 +196,19 @@ const Patienteditprofile = () => {
 
   return (
     <div className="container" style={{ marginTop:'40px'}}>
+          <Head>
+        <title>Edit Profile</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Edit Profil' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
       <div className="row flex-lg-nowrap">
         <div className="col">
           <div className="row">
             <div className="col mb-3">
               <div className="card">
               <form className="form" onSubmit={handleSubmit} noValidate>
-                <div className="card-body" style={{ width:'500px',maxWidth:'600px', maxHeight: '600px', top: '50%', left: '50%', overflowY: 'auto', scrollbarWidth: 'thin'}}>
+                <div className="card-body" style={{ width:'700px',maxWidth:'900px', maxHeight: '600px', top: '50%', left: '50%', overflowY: 'auto', scrollbarWidth: 'thin'}}>
                   <div className="e-profile">
                     <div className="row">
                       <div className="col-12 col-sm-auto mb-3">
@@ -375,8 +382,8 @@ const Patienteditprofile = () => {
                       
                           <div className="row">
                             <div className="col d-flex justify-content-end">
-                            <button type="submit" className="btn btn-primary mr-2" style={{  background: "#3085d6", borderColor: "#0c9da8", marginTop:"10px" }}>Update</button>
-                            <button type="button" className="btn btn-primary mr-2"  onClick={Cancel} style={{  background: "#3085d6", borderColor: "#0c9da8", marginTop:"10px" }}>Cancel</button>
+                            <button type="submit" className="patient-dashboard-btn" >Update</button>
+                            <button type="button" className="patient-dashboard-btn"  onClick={Cancel} >Cancel</button>
 
                             </div>
                           </div>

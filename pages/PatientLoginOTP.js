@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
+import TopBarHome from './homeTopbar.js';
 import { getOtpByEmail, patient_registration_update } from '../actions/patientAction';
 import { resendOTP } from '../actions/forgotpasswordAction';
 
@@ -38,7 +39,6 @@ const OTPPage = () => {
           const updateResponse = await patient_registration_update(registration_data); 
           if (updateResponse.error) {
             setError(updateResponse);
-            // setValues({ ...values, error: updateResponse.error });
           } else {
             localStorage.removeItem('userPhone');
             Router.push('/Patientlogin');
@@ -46,7 +46,6 @@ const OTPPage = () => {
         } catch (error) {
           console.error('Error updating registration status:', error);
           setError('Error updating registration status');
-          // setValues({ ...values, error: 'Error updating registration status', loading: false });
         }
       } else {
         setMessage('');
@@ -100,7 +99,7 @@ const OTPPage = () => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="title" content="Admin_Profile" />
       </Head>
-
+      <TopBarHome/>
       <div className="container">
         <div className="screen">
           <div className="screen__content">

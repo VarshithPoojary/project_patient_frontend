@@ -9,7 +9,7 @@ function Footer() {
   return (
     
    
-    <footer class="home_footer"  style={{backgroundColor:'#060822' }}>
+    <footer class="home_footer"  style={{marginTop:'10px',backgroundColor:'#060822' }}>
   <div class="footer-content"  >
           <BsTwitter />&nbsp;&nbsp;&nbsp;
           <SiLinkedin />&nbsp;&nbsp;&nbsp;
