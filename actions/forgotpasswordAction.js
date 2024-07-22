@@ -1,14 +1,14 @@
 import { API } from '../config';
 import fetch from 'isomorphic-fetch'; 
 
-export const patient_forgot_Password_OTP = patient_phone_number => {
+export const patient_forgot_Password_OTP = patient_email => {
   return fetch(`${API}/patient_forgot_Password_OTP`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({patient_phone_number })
+    body: JSON.stringify({patient_email })
   })
     .then(response => {
       return response.json();

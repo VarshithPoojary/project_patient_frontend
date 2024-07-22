@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Router from 'next/router';
-import { FaGraduationCap, FaBriefcase,FaCalendar } from 'react-icons/fa';
+import { FaGraduationCap, FaBriefcase,FaCalendar, FaCheck } from 'react-icons/fa';
 import { FiMapPin,FiCalendar } from 'react-icons/fi';
 import Topbar from '../topbar';
 import { caretaker_list_by_id } from '../../actions/doctorAction';
@@ -112,7 +112,7 @@ const AppointmentPage = () => {
           setSlotTimings([]);
         } else {
           const timings = response.slot_list.reduce((acc, slot) => {
-            return acc.concat(slot.slot_timings.map(timing => ({
+            return acc.concat(slot.slot_timings.filter(timing => timing.book_status === 'Available').map(timing => ({
               slot_id: slot._id,
               slot_time: timing.slot_time,
               slot_timing_id: timing._id,
@@ -135,6 +135,7 @@ const AppointmentPage = () => {
 
   const handleNextWeek = () => {
     setDateRangeIndex(dateRangeIndex + 1);
+    setSelectedSlotTime('');
   };
 
   const handlePreviousWeek = () => {
@@ -143,7 +144,7 @@ const AppointmentPage = () => {
 
   const handleConfirmAppointment = () => {
     if (!selectedDate || !selectedSlotTime) {
-      setErrorMessage('Please select both a date and a time.');
+      setErrorMessage('Please select both date and time.');
       setTimeout(() => {
         setErrorMessage('');
       }, 2000);
@@ -192,9 +193,9 @@ const AppointmentPage = () => {
   return (
     <div id="wrapper" style={{ backgroundColor: '#e9e6e6' }}>
       <Topbar />
-      <div className="appointment-banner">
+      {/* <div className="appointment-banner">
         <img
-          src="/images/doc-3.png"
+          src="/images/doc-7.png"
           alt="Doctor"
           className='appointment-banner-doctor'
         />
@@ -208,12 +209,14 @@ const AppointmentPage = () => {
           alt="Doctor"
           className='appointment-clock'
         />
-        {/* <h1>Book Appointment with {doctorName}</h1> */}
-      </div>
-      <div className="content-page" style={{ marginLeft: '10px', position: 'relative', zIndex: '0' }}>
+      </div> */}
+      <div className="content-page" style={{ margin: '15px', position: 'relative', zIndex: '0' }}>
         <div className="row-md-12" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="patient-content-page-doctorlist">
-            {/* <h3>Book Appointment with {doctorName}</h3> */}
+          <div className="appointment-content-page">
+          <h2 class="appointment-doctor-heading"><span class="serif">Book Appointment </span>
+           
+           {/* <span class="sans-serif">   {doctorName}</span> */}
+           </h2> 
             <div className="doctor-slot-container">
               <div className="appointment-specialistView-card">
                 <div className="appointment-specialist-card-content">
@@ -223,9 +226,6 @@ const AppointmentPage = () => {
                       alt="Profile"
                       className="appointment-specialist-img"
                     />
-                    <h6>
-                      {values.doctorsDetail.caretaker_firstname} {values.doctorsDetail.caretaker_lastname}
-                    </h6>
                   </div>
                   <div className="appointment-specialist-info">
                     <h5 className="appointment-specialistView-title">
@@ -234,11 +234,18 @@ const AppointmentPage = () => {
                     <label><FaGraduationCap /> {values.doctorsDetail.degree_name}</label>
                     <p><FaBriefcase /> {values.doctorsDetail.caretaker_work_experience} Years experienced overall</p>
                     <p><FiMapPin /> {values.doctorsDetail.caretaker_address}</p>
+                   
                   </div>
+                  
                 </div>
+                <div className='appointment-doctor-description'>
+              <h1 style={{ color: '#1294a3', fontSize: '30px', fontFamily: 'Arial, sans-serif', fontWeight: 'bold' }}>About Doctor:</h1>
+                  <p style={{ color: 'black', fontSize: '15px', fontFamily: 'Arial, sans-serif' }}>{values.doctorsDetail.description}</p>
+                  </div>
               </div>
               <div className="appointment-specialistView-card">
-                <h4><FiCalendar/>{renderMonth()}</h4>
+                <p>Select appointment date:</p>
+                <h5 style={{color:'gray'}}>{renderMonth()}</h5>
                 <div className="date-selector">
                   {availableDates.map((date, index) => (
                     <button
@@ -251,15 +258,16 @@ const AppointmentPage = () => {
                   ))}
                 </div>
                 <div className="next-week-button">
-                  {showPreviousButton && <button className="appointment-date-btn" onClick={handlePreviousWeek}>Previous</button>}
-                  <button className="appointment-date-btn" onClick={handleNextWeek}>Next</button>
-                </div>
+  {showPreviousButton && <button className="appointment-date-btn" onClick={handlePreviousWeek}>〈 Prev</button>}
+  <button className="appointment-date-btn" onClick={handleNextWeek}>Next 〉</button>
+</div>
+
                 {selectedDate && (
                   <>
                     {slotTimings.length > 0 ? (
                       <p>Select appointment time:</p>
                     ) : (
-                      <p>No available slots for selected date</p>
+                      <p >No available slots for selected date</p>
                     )}
                     <div className="slot-timings" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
                       {slotLoading ? (
@@ -284,13 +292,16 @@ const AppointmentPage = () => {
                 )}
               </div>
             </div>
+           
           </div>
         </div>
+          
       </div>
-      <Modal isOpen={isModalOpen} onRequestClose={closeModal} className="confirmation-modal">
+      <Modal isOpen={isModalOpen} className="appointmentView-modal" overlayClassName="appointmentView-modal-overlay">
+        <FaCheck className='Right-Icon'/>
         <h2>Appointment Booked Successfully!</h2>
         <p>Your appointment has been requested.</p>
-        <button  onClick={closeModal}>OK</button>
+        <button  onClick={closeModal} className="appointmentView-close-button">OK</button>
       </Modal>
     </div>
   );

@@ -128,7 +128,7 @@ const DoctorList = () => {
       <div className="content-page" style={{marginLeft:'10px', position:'relative', zIndex:'0'}}>
         <div className="row-md-12" style={{display:'flex',flexDirection:'column', marginTop:'20px'}}>
           <div className="patient-content-page-doctorlist">
-            <h3>{router.query.specialist_type_name} </h3>
+            <h3 className='specialist-topbar '>{router.query.specialist_type_name} </h3>
             <label style={{color:'gray'}}>{values.totalDoctors} Doctors Available in {router.query.specialist_type_name}</label>
             <div className="specialistView-doctor-list">
               {values.doctorsList.length > 0 ? (
@@ -145,18 +145,18 @@ const DoctorList = () => {
 
                       </div>
                       <div className="specialist-info">
-                        <h5 className="specialistView-title">{doctor.caretaker_firstname} {doctor.caretaker_lastname}</h5>
+                        <h5 className="specialistView-title" >{doctor.caretaker_firstname} {doctor.caretaker_lastname}</h5>
                         {/* <p>{doctor.caretaker_phone_number}</p>
                         <p>{doctor.caretaker_email}</p> */}
-                        <label><FaGraduationCap/> {doctor.degree_name}</label>
-                        <p><FaBriefcase/> {doctor.caretaker_work_experience} Years experienced overall</p>
-                        <p><FiMapPin/> {doctor.caretaker_address}</p>
+                        <h6><FaGraduationCap/> {doctor.degree_name}</h6>
+                        <h6><FaBriefcase/> {doctor.caretaker_work_experience} Years experienced overall</h6>
                         <div className="doctor-slot-container">
-                           <span className="doctor-slot-time">Mon-Fri (09:00 - 12:00)</span>
                             <button className="specialist-btn"  onClick={() => handleBookAppointment(`${doctor._id}`, `${doctor.caretaker_firstname} ${doctor.caretaker_lastname}`)}>Book Appointment</button>
                         </div>
                       </div>
                     </div>
+                    <label style={{padding:'10px 20px'}}>{doctor.description}</label> 
+
                   </div>
                 ))
               ) : (

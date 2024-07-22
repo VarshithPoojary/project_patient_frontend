@@ -7,14 +7,14 @@ import Router from 'next/router';
 
 
 const ForgotPasswordPage = () => {
-  const [patient_phone_number, setPatient_phone_number] = useState('');
+  const [patient_email, setPatient_email] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const handleGenerateOTP = async (e) => {
     e.preventDefault();
     try {
-      const response = await patient_forgot_Password_OTP(patient_phone_number);
+      const response = await patient_forgot_Password_OTP(patient_email);
       if(response.error)
         {
           setError(response.error);
@@ -24,7 +24,7 @@ const ForgotPasswordPage = () => {
           
         }
         else{
-          localStorage.setItem('userPhone',patient_phone_number);
+          localStorage.setItem('userEmail',patient_email);
           setMessage("OTP sent to you mail")
           setTimeout(() => {
             setMessage("")
@@ -57,16 +57,16 @@ const ForgotPasswordPage = () => {
                       <form onSubmit={handleGenerateOTP}>
                         <div className="row gx-3 mb-3">
                           <div className="col-md-6">
-                            <label className="small mb-1" htmlFor="patient_phone_number">Enter your phone number and you will receive an OTP to your registered Email.
+                            <label className="small mb-1" htmlFor="patient_email">Enter your registered Email and you will receive an OTP to your Email.
                             </label>
                             <input
                               className="form-control"
-                              id="patient_phone_number"
-                              type="patient_phone_number"
-                              placeholder="Enter Your Mobile Number"
-                              name="patient_phone_number"
-                              value={patient_phone_number}
-                              onChange={(e) => setPatient_phone_number(e.target.value)}
+                              id="patient_email"
+                              type="patient_email"
+                              placeholder="Enter Your Email"
+                              name="patient_email"
+                              value={patient_email}
+                              onChange={(e) => setPatient_email(e.target.value)}
                               required
                               style={{ width: "150%" }}
                             />

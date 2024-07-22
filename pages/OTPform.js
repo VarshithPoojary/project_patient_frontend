@@ -21,10 +21,10 @@ const OTPPage = () => {
     e.preventDefault();
     console.log('Submitting form...');
   
-    const userPhone = localStorage.getItem('userPhone');
+    const userEmail = localStorage.getItem('userEmail');
   
     try {
-      const response = await getOtpByEmail(userPhone);
+      const response = await getOtpByEmail(userEmail);
       const user = response;
   
       if (user.patient_otp === otpDigits) { 

@@ -36,7 +36,7 @@ const LoginForm = () => {
                 setValues({ ...values, error: 'Incorrect phone number or password', loading: false });
                 setTimeout(() => {
                     setValues({ ...values, error: '', loading: false });
-                }, 1000);
+                }, 2000);
             } else {
                 localStorage.setItem('id', response.userId);
                 setIsSuccess(true);
@@ -83,6 +83,7 @@ const LoginForm = () => {
                             <div className="row gx-3 mb-3">
                                 <div className="col-md-12">
                                     <label className="small mb-1" htmlFor="password">Enter your Password:</label>
+                                    <div className="password-input-container">
                                     <input
                                         className="form-control"
                                         id="password"
@@ -93,10 +94,11 @@ const LoginForm = () => {
                                         onChange={handleChange('password')}
                                     />
                                     <span
-                                        className={`fas ${values.showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+                                        className={`fas ${values.showPassword ? 'fa-eye-slash' : 'fa-eye'} userPassword-toggle-icon`}
                                         onClick={togglePasswordVisibility}
                                         style={{ cursor: 'pointer' }}
                                     ></span>
+                                    </div>
                                 </div>
                             </div>
                             <button type="submit" className="button login__submit">

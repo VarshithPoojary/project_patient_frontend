@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { FiCamera } from 'react-icons/fi'; 
 import Head from 'next/head';
 import Router from 'next/router';
+import Topbar from './topbar';
 import { country_list } from '../actions/countryAction';
 import { state_list_by_country_id,state_list } from '../actions/stateAction';
 import { city_list_by_state_id,city_list,CityListById } from '../actions/cityAction';
@@ -69,6 +70,7 @@ const Patienteditprofile = () => {
                   setValues({ ...values, error: data.error, loading: false });
               } else {
                   const patientData = data.patient_list[0];
+                  alert(JSON.stringify(patientData))
                   setValues({
                       ...values,
                       patient_first_name: patientData.patient_first_name,
@@ -189,13 +191,13 @@ const Patienteditprofile = () => {
   };
 
   const Cancel = () => {
-    const user_id = localStorage.getItem("id");
-    loadUserDetails(user_id);
+    Router.push(`/PatientProfileUI`);
+
 };
 
 
   return (
-    <div className="container" style={{ marginTop:'40px'}}>
+    <div className="container" style={{ marginTop:'0px'}}>
           <Head>
         <title>Edit Profile</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -203,12 +205,13 @@ const Patienteditprofile = () => {
         <link rel="icon" href="/images/title_logo.png" />
       </Head>
       <div className="row flex-lg-nowrap">
+        <Topbar/>
         <div className="col">
           <div className="row">
             <div className="col mb-3">
-              <div className="card">
+              <div className="card" style={{marginTop:'80px'}}>
               <form className="form" onSubmit={handleSubmit} noValidate>
-                <div className="card-body" style={{ width:'700px',maxWidth:'900px', maxHeight: '600px', top: '50%', left: '50%', overflowY: 'auto', scrollbarWidth: 'thin'}}>
+                <div className="card-body" style={{width:'900px',maxWidth:'900px', top: '50%', left: '50%', overflowY: 'auto'}}>
                   <div className="e-profile">
                     <div className="row">
                       <div className="col-12 col-sm-auto mb-3">
@@ -339,7 +342,6 @@ const Patienteditprofile = () => {
                             <div className="col-md-4">
                               <label className="small mb-1" htmlFor="Country">Country*</label>
                               <select className="form-control" id="country" value={patient_country_id} onChange={handleChange('patient_country_id')} >
-                                {/* <option value=""></option> */}
                                 {countryList.map(country => (
                                     <option key={country._id} value={country._id}>{country.admin_country_name}</option>
                                 ))}
@@ -383,7 +385,7 @@ const Patienteditprofile = () => {
                           <div className="row">
                             <div className="col d-flex justify-content-end">
                             <button type="submit" className="patient-dashboard-btn" >Update</button>
-                            <button type="button" className="patient-dashboard-btn"  onClick={Cancel} >Cancel</button>
+                            <button type="button" className="patient-dashboard-btn"  onClick={Cancel} style={{marginLeft:'20px'}} >Cancel</button>
 
                             </div>
                           </div>

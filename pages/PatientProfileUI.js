@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
+import Modal from 'react-modal';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -16,7 +17,7 @@ import {
 } from "react-pro-sidebar";
 import {BiCalendar, BiUser, BiListUl, BiCart,  BiEdit, BiCreditCard, BiLock } from 'react-icons/bi'; 
 import {GiMedicines} from "react-icons/gi";
-import {FaNotesMedical, FaSquareFull,FaHandsHelping,FaShoppingCart,FaHome,FaUserMd} from "react-icons/fa";
+import {FaNotesMedical, FaSquareFull,FaHandsHelping,FaShoppingCart,FaHome,FaUserMd, FaCheck} from "react-icons/fa";
 import {FiHome,FiLogOut, FiMapPin} from "react-icons/fi";
 import "react-pro-sidebar/dist/css/styles.css";
 import Topbar from './topbar';
@@ -68,9 +69,10 @@ const PatientProfile = () => {
     bannerList:[],
     isEditingAddress: false,
     isEditingDetails: false,
+    isModalOpen: false,
   });
 
-  const { patient_list,patient_first_name ,patient_last_name,patient_phone_number,patient_country_code,patient_dob,patient_gender,patient_email,patient_address,patient_country_id,patient_state_id,patient_area_id,patient_pincode,patient_main_address,patient_register_status,password,patient_city_id, patient_profile_image,countrydetail, statedetail, citydetail,bannerList, error, loading, isEditingAddress, isEditingDetails } = values;
+  const { patient_list,patient_first_name ,patient_last_name,patient_phone_number,patient_country_code,patient_dob,patient_gender,patient_email,patient_address,patient_country_id,patient_state_id,patient_area_id,patient_pincode,patient_main_address,patient_register_status,password,patient_city_id, patient_profile_image,countrydetail, statedetail, citydetail,bannerList, error, loading, isEditingAddress, isEditingDetails, isModalOpen } = values;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -234,10 +236,7 @@ const handleCancelEditAddress = () => {
 };
 
 
-const handleSaveAddress = (newAddress) => {
-  console.log("New Address:", newAddress);
-  setValues({ ...values, isEditingAddress: false });
-};
+
 
 const handleCancelEditDetails = () => {
   const user_id = localStorage.getItem('id');
@@ -279,13 +278,21 @@ const handleSaveDetails = async (e) => {
   formData.append('patient_dob', values.patient_dob);
   formData.append('patient_gender', values.patient_gender);
   formData.append('patient_email', values.patient_email);
+  formData.append('patient_address', values.patient_address);
+  formData.append('patient_country_id', values.patient_country_id);
+  formData.append('patient_state_id', values.patient_state_id);
+  formData.append('patient_area_id', values.patient_area_id);
+  formData.append('patient_pincode', values.patient_pincode);
   try {
+    alert(JSON.stringify(formData))
     const response = await update_patient(formData);
 
     if (response.error) {
       setValues({ ...values, error: response.error });
     } else {
-      setValues({ ...values, isEditingDetails: false });
+      setValues({ ...values, isEditingDetails: false , isEditingAddress:false, isModalOpen: true});
+      const user_id = localStorage.getItem('id');
+      loadUserDetails(user_id);
     }
   } catch (error) {
     console.error('Error:', error);
@@ -293,8 +300,38 @@ const handleSaveDetails = async (e) => {
   }
 };
 
+const handleSaveAddress = async (e) => {
+  e.preventDefault();
+  const patient_id = localStorage.getItem('id');
+  const formData = new FormData();
+  formData.append('patient_id', patient_id);
+  formData.append('patient_first_name', values.patient_first_name);
+  formData.append('patient_last_name', values.patient_last_name);
+  formData.append('demoimg', values.patient_profile_image); // Assuming profileImage is a file object
+  formData.append('patient_phone_number', values.patient_phone_number);
+  formData.append('patient_dob', values.patient_dob);
+  formData.append('patient_gender', values.patient_gender);
+  formData.append('patient_email', values.patient_email);
+  try {
+    const response = await update_patient(formData);
 
+    if (response.error) {
+      setValues({ ...values, error: response.error });
+    } else {
+      setValues({ ...values, isEditingDetails: false });
+      const user_id = localStorage.getItem('id');
+      loadUserDetails(user_id);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    setValues({ ...values, error: 'Error updating profile', loading: false });
+  }
+};
 
+const closeModal = () => {
+  setValues({ ...values, isModalOpen: false , isEditingDetails: false , isEditingAddress:false});
+  Router.push(`/PatientProfileUI`);
+};
 
 const handleLogout = () => {
   localStorage.removeItem('id');
@@ -313,7 +350,7 @@ const renderEditButton = () => {
   if (isEditingAddress) {
     return (
       <div>
-        <button onClick={handleSaveAddress} className="patient-profile-edit-btn">Submit</button>
+        <button onClick={handleSaveDetails} className="patient-profile-edit-btn">Submit</button>
         <button onClick={handleCancelEditAddress} className="patient-profile-back-btn">Cancel</button>
       </div>
     );
@@ -385,17 +422,28 @@ return (
       <Link href='/dashboard'><span>Dashboard</span></Link>
     </MenuItem>
     <MenuItem icon={<FaUserMd />} title="Specialist" className='patient-profile-menu'>
-      <Link href='/Admin/viewAdminList'><span>Specialist</span></Link>
+      <Link href='/Doctor/specialistView'><span>Specialist</span></Link>
     </MenuItem>
-    <MenuItem icon={<BiListUl />} title="Appointment" className='patient-profile-menu'>Appointment</MenuItem>
-    <MenuItem icon={<BiCalendar />} title="Slot" className='patient-profile-menu'>View Slot</MenuItem>
-    <MenuItem icon={<GiMedicines />} title="Product" className='patient-profile-menu'>View Product</MenuItem>
-    <MenuItem icon={<FaNotesMedical />} title="Description" className='patient-profile-menu'>View Description</MenuItem>
-    <MenuItem icon={<BiCreditCard />} title="Description" className='patient-profile-menu'>Payment Details</MenuItem>
-    <MenuItem icon={<BiLock />} title="Description" className='patient-profile-menu'>Security</MenuItem>
-    <MenuItem icon={<BiCart />} title="Order" className='patient-profile-menu'>Your Order</MenuItem>
+    <MenuItem icon={<BiListUl />} title="Appointment" className='patient-profile-menu'>
+    <Link href='/Doctor/specialistView'><span>Appointment</span></Link>
+    </MenuItem>
+    <MenuItem icon={<FaUserMd />} title="Doctor" className='patient-profile-menu'>
+    <Link href='/Doctor/doctorList'><span>Doctor</span></Link>
+    </MenuItem>
+    <MenuItem icon={<FaNotesMedical />} title="Report" className='patient-profile-menu'>
+    <Link href='/Appointment/appointmentReport'><span>Report</span></Link>
+    </MenuItem>
+    <MenuItem icon={<BiCreditCard />} title="Medical History" className='patient-profile-menu'>
+    <Link href='/Appointment/appointmentList'><span>Medical History</span></Link>
+    </MenuItem>
+    <MenuItem icon={<BiLock />} title="Privacy Setting" className='patient-profile-menu'>
+    <Link href='/userPasswordEdit'><span>Privacy Setting</span></Link>
+    </MenuItem>
+    <MenuItem icon={<BiCart />} title="Order" className='patient-profile-menu'>
+    <Link href='/dashboard'><span>Your Order</span></Link>
+    </MenuItem>
     {/* <MenuItem icon={<FaShoppingCart />} title="Order" className='patient-profile-menu'>Cart</MenuItem> */}
-    <MenuItem icon={<FaHandsHelping />} title="Order" className='patient-profile-menu'>Help</MenuItem>
+    <MenuItem icon={<FaHandsHelping />} title="Logout" className='patient-profile-menu'>Help</MenuItem>
     <MenuItem icon={<FiLogOut />} title="Logout" className='patient-profile-menu' onClick={handleLogout}>
     <span>Logout</span>
     </MenuItem>
@@ -533,6 +581,7 @@ return (
  </form>
 </div>
 <div className="col-md-6">
+<form className="form" onSubmit={handleSaveDetails} noValidate>
   <div className="patient-card-header">
       <span>{<FiMapPin />} Address Details</span>
       <span className="patient-edit-icon" onClick={handleEditAddress}>{< BiEdit />}</span> 
@@ -599,7 +648,8 @@ return (
         </div>
         
     </div>
-    
+    </form>
+
 </div>
 </div>
 </div>
@@ -609,6 +659,12 @@ return (
   {renderEditButton()}
 </div>
 </div>
+<Modal isOpen={isModalOpen} className="appointmentView-modal" overlayClassName="appointmentView-modal-overlay">
+        <FaCheck className='Right-Icon'/>
+        <h2>Edited Successfully!</h2>
+        <p>Your details has been edited.</p>
+        <button  onClick={closeModal} className="appointmentView-close-button">OK</button>
+      </Modal>
 </div>
 </section>
 );

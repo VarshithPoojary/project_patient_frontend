@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Router from 'next/router';
-import { FaGraduationCap, FaBriefcase, FaCalendarDay } from 'react-icons/fa';
-import { FiMapPin, FiEdit2, FiXCircle,FiCalendar,FiClock } from 'react-icons/fi';
+import { FaGraduationCap, FaBriefcase, FaCalendarDay, FaCheck, FaTimes, FaClock } from 'react-icons/fa';
+import { FiMapPin, FiEdit2, FiXCircle, FiCalendar, FiClock, FiDelete } from 'react-icons/fi';
 import Topbar from '../topbar';
 import { caretaker_list_by_id } from '../../actions/doctorAction';
 import { get_available_slots, update_appointment, appointment_cancel, appointment_list_by_id } from '../../actions/appointmentAction';
 import { patient_list_by_id } from '../../actions/patientAction';
 import moment from 'moment';
+import Modal from 'react-modal';
 
 const AppointmentPage = () => {
   const defaultProfileImage = '/images/doctorMenLogo.png';
@@ -42,7 +43,8 @@ const AppointmentPage = () => {
   const [isCancelling, setIsCancelling] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [canceled_type, setCanceled_type] = useState('Patient');
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -100,7 +102,7 @@ const AppointmentPage = () => {
         if (response.error) {
           console.log(response.error);
         } else {
-          setValues(values => ({ ...values, appointmentDetail: response.appointment_list[0] }));
+          setValues((values) => ({ ...values, appointmentDetail: response.appointment_list[0] }));
         }
       })
       .catch((error) => {
@@ -132,7 +134,7 @@ const AppointmentPage = () => {
           setSlotTimings([]);
         } else {
           const timings = response.slot_list.reduce((acc, slot) => {
-            return acc.concat(slot.slot_timings.map(timing => ({
+            return acc.concat(slot.slot_timings.filter(timing => timing.book_status === 'Available').map(timing => ({
               slot_id: slot._id,
               slot_time: timing.slot_time,
               slot_timing_id: timing._id,
@@ -160,7 +162,7 @@ const AppointmentPage = () => {
   const handlePreviousWeek = () => {
     setDateRangeIndex(dateRangeIndex - 1);
   };
- 
+
   const handleConfirmAppointment = () => {
     if (!selectedDate || !selectedSlotTime) {
       setErrorMessage('Please select both a date and a time.');
@@ -170,7 +172,7 @@ const AppointmentPage = () => {
       return;
     }
 
-    const selectedSlot = slotTimings.find(slot => slot.slot_time === selectedSlotTime);
+    const selectedSlot = slotTimings.find((slot) => slot.slot_time === selectedSlotTime);
     const appointmentData = {
       appointmentId: router.query.appointmentId,
       caretaker_id: router.query._id,
@@ -182,17 +184,18 @@ const AppointmentPage = () => {
     };
 
     update_appointment(appointmentData)
-      .then(response => {
+      .then((response) => {
         if (response.error) {
           setErrorMessage(response.error);
           setTimeout(() => {
             setErrorMessage('');
           }, 2000);
         } else {
-          Router.push(`/dashboard`);
+          setModalMessage('Appointment successfully edited.');
+          setIsModalOpen(true);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error confirming appointment:', error);
         setErrorMessage('An error occurred while confirming the appointment.');
         setTimeout(() => {
@@ -202,11 +205,10 @@ const AppointmentPage = () => {
   };
 
   const handleCancelConfirmAppointment = () => {
-     setIsEditing(false)
-     setSelectedSlotTime('')
-     setSelectedDate('')
-
-    }
+    setIsEditing(false);
+    setSelectedSlotTime('');
+    setSelectedDate('');
+  };
 
   const handleDeleteAppointment = () => {
     if (!cancelReason) {
@@ -216,23 +218,22 @@ const AppointmentPage = () => {
       }, 2000);
       return;
     }
-
-   
-
+    const user_id = localStorage.getItem('id');
     const appointmentId = router.query.appointmentId;
-    const cancelDetails = { appointmentId, cancelReason,canceled_type }
+    const cancelDetails = { appointmentId, cancelReason, canceled_type, user_id };
     appointment_cancel(cancelDetails)
-      .then(response => {
+      .then((response) => {
         if (response.error) {
           setErrorMessage(response.error);
           setTimeout(() => {
             setErrorMessage('');
           }, 2000);
         } else {
-          Router.push(`/dashboard`);
+          setModalMessage('Appointment successfully canceled.');
+          setIsModalOpen(true);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error deleting appointment:', error);
         setErrorMessage('An error occurred while deleting the appointment.');
         setTimeout(() => {
@@ -241,134 +242,123 @@ const AppointmentPage = () => {
       });
   };
 
-  const handleCancelDeleteAppointment = () => {
-    setIsCancelling(false)
-    setCancelReason('')
+  const closeModal = () => {
+    setIsModalOpen(false);
+    Router.push(`/dashboard`);
+  };
 
-   }
+  const handleCancelDeleteAppointment = () => {
+    setIsCancelling(false);
+    setCancelReason('');
+  };
 
   const renderMonth = () => {
     return selectedDate ? selectedDate.format('DD MMMM YYYY') : '';
   };
 
   return (
-    <div id="wrapper" style={{ backgroundColor: '#e9e6e6' }}>
+    <div id="wrapper" className="appointmentView-wrapper">
       <Topbar />
-      <div className="content-page" style={{ marginLeft: '10px', position: 'relative', zIndex: '0' }}>
-        <div className="row-md-12" style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
-          <div className="patient-content-page-doctorlist">
-            <div className="doctor-details">
+      <div className="appointmentView-content-page">
+        <div className="appointmentView-row-md-12">
+          <div className="appointmentView-patient-content-page-doctorlist">
+            <div className="appointmentView-doctor-details">
               <h3>Appointment with {values.doctorsDetail.caretaker_firstname} {values.doctorsDetail.caretaker_lastname}</h3>
-              {/* <h4>Dated On {values.appointmentDetail.appointment_date} at {values.appointmentDetail.slot_timing}</h4> */}
-              <div className="doctor-slot-container">
-                <div className="specialistView-card">
-                  <div className="specialist-card-content">
-                    <div className="specialist-card-img">
-                      <img
-                        src={values.doctorsDetail.caretaker_profile_image || defaultProfileImage}
-                        alt="Profile"
-                        className="specialist-img"
-                      />
-                    </div>
-                    <div className="specialist-info">
-                      <h5 className="specialist-card-title">
-                        {values.doctorsDetail.caretaker_firstname} {values.doctorsDetail.caretaker_lastname}
-                      </h5>
-                      <p className="specialist-card-text">{values.doctorsDetail.caretaker_type}</p>
-                       <p> <FaGraduationCap /> {values.doctorsDetail.degree_name}
-                        </p>
-                     <p>
-                        <FaBriefcase /> {values.doctorsDetail.caretaker_work_experience} years of experience
-                        </p>
-                      <div className="specialist-location">
-                        <FiMapPin /> {values.doctorsDetail.caretaker_address}
-                      </div>
-                    </div>
-                  </div>
-                  </div>
-                  <div className="specialistView-card">
-                    
-                  <div className="appointment-info display-appointment-info row-md-3">
-                    <p className='appointment-date-display '><strong><FiCalendar/> Date:</strong> {values.appointmentDetail.appointment_date}</p>
-                    <p className='appointment-time-display '><strong><FiClock/> Time:</strong> {values.appointmentDetail.slot_timing}</p>
-                  </div>
-                  <div className="edit-button">
-                    <button className="appointment-date-btn" onClick={() => setIsEditing(true)}><FiEdit2 /> Edit</button>
-                    <button className="appointment-date-btn" onClick={() => setIsCancelling(true)}><FiXCircle /> Cancel</button>
-                  </div>
-                  {isEditing && (
-                    <div className="edit-modal">
-                      <h3>Edit Appointment</h3>
-                      <div className="edit-content">
-                      <h4>{renderMonth()}</h4>
-                        <div className="date-selector">
-                          {availableDates.map(date => (
-                            <button
-                              key={date.format('YYYY-MM-DD')}
-                              className={`calendar-date ${selectedDate && date.isSame(selectedDate, 'day') ? 'selected' : ''}`}
-                              onClick={() => handleDateChange(date)}
-                            >
-                              {date.format('ddd DD')}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="time-slot-container">
-                        {selectedDate && (
-                  <>
-                    {slotTimings.length > 0 ? (
-                      <p>Select appointment time:</p>
-                    ) : (
-                      <p>No available slots for selected date</p>
-                    )}
-                    <div className="slot-timings" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-                      {slotLoading ? (
-                        <p>Loading slots...</p>
-                      ) : slotTimings.length > 0 ? (
-                        slotTimings.map((slot, index) => (
-                          <button
-                            key={index}
-                            className={`time-slot ${selectedSlotTime === slot.slot_time ? 'selected' : ''}`}
-                            onClick={() => handleSelectSlotTime(slot.slot_time)}
-                          >
-                            {slot.slot_time}
-                          </button>
-                        ))
-                      ) : (
-                        <p>Please select another date</p>
-                      )}
-                    </div>
-                  </>
-                )}
-                        </div>
-                        {showPreviousButton && <button className="appointment-date-btn" onClick={handlePreviousWeek}>Previous Week</button>}
-                        <button className="appointment-date-btn" onClick={handleNextWeek}>Next Week</button>
-                      </div>
-                      <div className="edit-actions">
-                      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                        <button className="appointment-date-btn" onClick={handleConfirmAppointment}>Confirm</button>
-                        <button className="appointment-date-btn" onClick={handleCancelConfirmAppointment}>Cancel</button>
-                      </div>
-                    </div>
-                  )}
-                  {isCancelling && (
-                    <div className="cancel-modal">
-                      <h3>Cancel Appointment</h3>
-                      <textarea
-                        value={cancelReason}
-                        onChange={(e) => setCancelReason(e.target.value)}
-                        placeholder="Reason for cancellation"
-                      />
-                                    {errorMessage && <div className="error-message">{errorMessage}</div>}
-
-                      <div className="cancel-actions" >
-                        <button className="appointment-date-btn" onClick={handleDeleteAppointment}>Confirm</button>
-                        <button className="appointment-date-btn" onClick={handleCancelDeleteAppointment}>Cancel</button>
-                      </div>
-                    </div>
-                  )}
-                </div>
+              <h6>Dated on {values.appointmentDetail.appointment_date} at {values.appointmentDetail.slot_timing}</h6>
+              <div className="appointmentView-doctor-image">
+                <img src={values.doctorsDetail.caretaker_profile_image || defaultProfileImage} alt="Doctor" />
+              </div>
+              <div className="appointmentView-doctor-info">
+                <p><FaGraduationCap /> {values.doctorsDetail.degree_name}</p>
+                <p><FaBriefcase /> {values.doctorsDetail.caretaker_work_experience} Years of Experience</p>
+                <p><FiMapPin /> {values.doctorsDetail.caretaker_address}</p>
+              </div>
+              <div className="appointmentView-buttons">
+              {values.appointmentDetail.status === 'Active' && (
+                <button onClick={() => setIsEditing(true)} className="appointmentView-edit-button">
+                  <FiEdit2 /> Edit Appointment
+                </button>
+              )}
+                <button onClick={() => setIsCancelling(true)} className="appointmentView-delete-button">
+                  <FiDelete /> Cancel Appointment
+                </button>
               </div>
             </div>
+            {isEditing && (
+              <div className="appointmentView-appointment-details">
+                <h4>Select a new date and time: </h4>
+                <div className="appointmentView-dates">
+                  {availableDates.map((date) => (
+                    <div
+                      key={date.format('YYYY-MM-DD')}
+                      className={`appointmentView-date ${selectedDate && selectedDate.isSame(date, 'day') ? 'appointmentView-selected' : ''}`}
+                      onClick={() => handleDateChange(date)}
+                    >
+                      {date.format('ddd, DD MMM')}
+                    </div>
+                  ))}
+                </div>
+                <div className="next-week-button">
+                  {showPreviousButton && <button className="appointment-date-btn" onClick={handlePreviousWeek}>〈 Prev</button>}
+                  <button className="appointment-date-btn" onClick={handleNextWeek}>Next 〉</button>
+                </div>
+                {selectedDate && (
+                  <div className="appointmentView-slots">
+                    {slotLoading ? (
+                      <p>Loading available slots...</p>
+                    ) : slotTimings.length === 0 ? (
+                      <p>No available slots for the selected date.</p>
+                    ) : (
+                      slotTimings.map((slot) => (
+                        <div
+                          key={slot.slot_time}
+                          className={`appointmentView-slot ${selectedSlotTime === slot.slot_time ? 'appointmentView-selected' : ''}`}
+                          onClick={() => handleSelectSlotTime(slot.slot_time)}
+                        >
+                          {slot.slot_time}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+                <p className='appointmentView-selected-date-time'><span><FiCalendar/> Date: {renderMonth() ? renderMonth() : "Select Date"}</span>
+                <span> <FiClock/> Time: {selectedSlotTime ? selectedSlotTime : "Select Time"}</span></p>
+
+                <div className="appointmentView-buttons">
+                  <button onClick={handleConfirmAppointment} className="appointmentView-confirm-button">
+                    <FaCheck /> Confirm
+                  </button>
+                  <button onClick={handleCancelConfirmAppointment} className="appointmentView-cancel-button">
+                    <FaTimes /> Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            {isCancelling && (
+              <div className="appointmentView-cancel-confirmation">
+                <h4>Reason for Cancellation:</h4>
+                <textarea
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  placeholder="Enter reason for cancellation"
+                />
+                <div className="appointmentView-buttons">
+                  <button onClick={handleDeleteAppointment} className="appointmentView-delete-button">
+                    <FiDelete /> Confirm Cancellation
+                  </button>
+                  <button onClick={handleCancelDeleteAppointment} className="appointmentView-cancel-button">
+                    <FaTimes /> Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            {errorMessage && <p className="appointmentView-error-message">{errorMessage}</p>}
+            <Modal isOpen={isModalOpen} onRequestClose={closeModal} className="appointmentView-modal" overlayClassName="appointmentView-modal-overlay">
+            <FaCheck className='Right-Icon'/>
+              <h2>{modalMessage}</h2>
+              <p>Your appointment has been successfully {modalMessage === 'Appointment successfully edited.' ? 'edited' : 'canceled'}.</p>
+              <button onClick={closeModal} className="appointmentView-close-button">Close</button>
+            </Modal>
           </div>
         </div>
       </div>

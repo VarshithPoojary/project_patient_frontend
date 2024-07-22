@@ -10,6 +10,7 @@ import { banner_list } from '../../actions/bannerAction';
 import { findDoctorsWithinRadius } from '../../actions/doctorAction';
 import { specialist_list } from '../../actions/specialistAction';
 import { appointment_list_by_patientId } from '../../actions/appointmentAction';
+import ReactStars from 'react-stars';
 
 const Users = () => {
     const defaultProfileImage = '/images/doctorMenLogo.png';
@@ -173,6 +174,7 @@ const Users = () => {
     };
 
     const handleSpecialistClick = (index) => {
+        setShowSpecialists(false);
         const element = document.getElementById(`specialist-${index}`);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
@@ -251,11 +253,17 @@ const Users = () => {
                                                 <img src={doctor.caretaker_profile_image} alt={doctor.caretaker_firstname} className="doctorList-card-image" />
                                                 <div className="doctorList-card-content">
                                                     <p className="doctorList-card-specialization">{doctor.caretaker_type}</p>
-                                                    <h6 className="doctorList-card-name">Dr. {doctor.caretaker_firstname}</h6>
+                                                    <h6 className="doctorList-card-name"> {doctor.caretaker_firstname}</h6>
                                                     <p className="doctorList-card-description">
                                                         <label><FaGraduationCap /> {doctor.degree_name}</label>
                                                         <p><FaBriefcase /> {doctor.caretaker_work_experience} Years experienced overall</p>
-                                                        <p><FiMapPin /> {doctor.caretaker_address}</p>
+                                                        <p><ReactStars
+                                                        count={5}
+                                                        value={doctor.caretaker_rating}
+                                                        size={24}
+                                                        color2={'#f5bf4b'}
+                                                        edit={false}
+                                                    /></p>
                                                     </p>
                                                 </div>
                                                 <div className="doctor-card-buttons">

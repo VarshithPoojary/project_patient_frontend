@@ -66,7 +66,7 @@ function Specialist() {
             ))}
           </div>
           <div className="specialist-side-image">
-            <img src="/images/specialists.png" alt="Specialists" layout="fill" objectFit="cover" />
+            <img src="/images/fullDoctor-1.png" alt="Specialists" layout="fill" objectFit="cover" />
           </div>
           </div>
            <div className='specialist-view-footer'>

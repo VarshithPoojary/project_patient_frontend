@@ -58,7 +58,7 @@ const App = () => {
                         </Link>
                     </li>
                     <li className="home-nav-item">
-                        <Link href="#services">
+                        <Link href="#ourServices">
                             <a className="home-nav-link">Service</a>
                         </Link>
                     </li>
@@ -73,7 +73,7 @@ const App = () => {
                         </Link>
                     </li>
                     <li className="home-nav-item">
-                        <Link href="#help">
+                        <Link href="#contact">
                             <a className="home-nav-link">Help</a>
                         </Link>
                     </li>
@@ -87,8 +87,10 @@ const App = () => {
             <header className="home-header">
                 <div className="home-header-content">
                     <div className="home-header-text">
-                        <h1 className="fade-slide-in">Your Health And Safety Is Our Priority</h1>
-                        <p className="fade-slide-in">Now take the appointments by sitting at Home,save you time </p>
+                    <h1 className="fade-slide-in">Your Health And Safety Is Our Priority</h1>
+<p className="fade-slide-in">Now take the appointments by sitting at Home,save your time </p>
+<p className="fade-slide-in">Experience the best healthcare services from the comfort of your own home</p>
+
                         <button onClick={handleBookAppointment} className="home-signup-button fade-slide-in">Book Appointment</button>
                     </div>
                 </div>
@@ -102,44 +104,44 @@ const App = () => {
                                 <div className="col home-link-main">
                                 <Link href="./Patientlogin">
                                 <a  className="home-tp_widget" id="home-btn-cta-bb-book-appointment" style={{ color: '#0071BA', fontWeight: '600px' }}>
-                                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/bookappt_icon.svg" alt="icon" width="64" />
+                                        <img src="/images/calendar-2.png" alt="icon" width="64" />
                                         <h5>Book Appointment</h5>
                                     </a>
                         </Link>
                                 </div>
                                 <div className="col d-none d-sm-block home-link-main">
-                                    <a href="./Registration" target="_blank" className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
-                                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/bookhelathcheck_icon.svg" alt="icon" />
+                                    <a href="./Patientlogin" target="_blank" className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
+                                        <img src="/images/plus-1.png" alt="icon" />
                                         <h5>Book Health Check-Up</h5>
                                     </a>
                                 </div>
                                 <div className="col d-sm-none d-block home-link-main">
-                                    <a href="./Registration" target="_blank" className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
-                                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/bookhelathcheck_icon.svg" alt="icon" />
+                                    <a href="./Patientlogin" target="_blank" className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
+                                        <img src="/images/calendar-2.png" alt="icon" />
                                         <h5>Book Health Check-Up</h5>
                                     </a>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Registration" id="home-btn-cta-bb-consult-online" target="_blank" className="home-tp_widget">
-                                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/buymedicines_icon.svg" alt="icon" />
+                                    <a href="./Patientlogin" id="home-btn-cta-bb-consult-online" target="_blank" className="home-tp_widget">
+                                        <img src="/images/calendar-1 (11).png" alt="icon" />
                                         <h5>Consult Online</h5>
                                     </a>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Registration" id="home-btn-cta-bb-buy-medicine" target="_blank" className="home-tp_widget">
-                                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/consultonline_icon.svg" alt="icon" />
+                                    <a href="./Patientlogin" id="home-btn-cta-bb-buy-medicine" target="_blank" className="home-tp_widget">
+                                        <img src="/images/medicine-1.png" alt="icon" />
                                         <h5>Buy Medicine</h5>
                                     </a>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Registration" id="home-btn-cta-bb-find-hospital" className="home-tp_widget">
-                                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/findhsptl_icon.svg" alt="icon" />
+                                    <a href="./Patientlogin" id="home-btn-cta-bb-find-hospital" className="home-tp_widget">
+                                        <img src="/images/search-1.png" alt="icon" />
                                         <h5>Find Hospital</h5>
                                     </a>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Registration" target="_blank" id="home-btn-cta-bb-book-labtest" className="home-tp_widget">
-                                        <img src="https://www.apollohospitals.com/wp-content/themes/apollohospitals/assets-v3/images/finddoctor_icon.svg" alt="icon" />
+                                    <a href="./Patientlogin" target="_blank" id="home-btn-cta-bb-book-labtest" className="home-tp_widget">
+                                        <img src="/images/calendar-1 (10).png" alt="icon" />
                                         <h5>View Health Record</h5>
                                     </a>
                                 </div>

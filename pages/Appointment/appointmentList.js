@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Router from 'next/router';
+import Head from 'next/head';
 import Topbar from '../topbar';
 import { appointment_list_by_patientId } from '../../actions/appointmentAction';
 import { FaEye } from 'react-icons/fa';
+import Modal from 'react-modal';
 
 const AllAppointments = () => {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('Upcoming');
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -34,11 +37,21 @@ const AllAppointments = () => {
         }
     };
 
-    const handleView = (_id, appointmentId) => {
-        Router.push({
-            pathname: '/Appointment/appointmentHistory',
-            query: { _id, appointmentId }
-        });
+    const handleView = (_id, appointmentId, status) => {
+        if (status === 'Done') {
+            Router.push({
+                pathname: '/Appointment/appointmentHistory',
+                query: { _id, appointmentId }
+            });
+        }  if (status === 'Active' || status === 'Accepted') {
+            Router.push({
+                pathname: '/Appointment/viewAppointment',
+                query: { _id, appointmentId }
+            });
+        }else {
+            const appointment = appointments.find(app => app._id === appointmentId);
+            setSelectedAppointment(appointment);
+        }
     };
 
     const filterAppointments = (status) => {
@@ -94,6 +107,12 @@ const AllAppointments = () => {
 
     return (
         <div className='appointmentList-main'>
+             <Head>
+        <title>Appointment List</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Appointment-List' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
             <Topbar />
             <div className="appointmentList-container">
                 <div className="appointmentList-tabs">
@@ -134,7 +153,7 @@ const AllAppointments = () => {
                                                 {approvedStatusFormatter(appointment.status)}
                                             </div>
                                             <div className="appointmentList-actions">
-                                                <button onClick={() => handleView(`${appointment.caretaker_id}`, `${appointment._id}`)} style={{ border: 'none', background: 'none' }}>
+                                                <button onClick={() => handleView(`${appointment.caretaker_id}`, `${appointment._id}`, appointment.status)} style={{ border: 'none', background: 'none' }}>
                                                     <FaEye />
                                                 </button>
                                             </div>
@@ -147,6 +166,35 @@ const AllAppointments = () => {
                         <div>No appointments found.</div>
                     )}
                 </div>
+                <Modal
+                    isOpen={!!selectedAppointment}
+                    onRequestClose={() => setSelectedAppointment(null)}
+                    contentLabel="Appointment Detail"
+                    className="appointmentList-modal" overlayClassName="appointmentList-modal-overlay"
+                >
+                    {selectedAppointment && (
+                        <div className="appointmentDetails-model-content">
+                            <div style={{display:'flex', justifyContent:'space-between'}}>
+                            <h4>Appointment Detail</h4>
+                            <p style={{color:'gray'}}>{approvedStatusFormatter(selectedAppointment.status)}</p> 
+                            </div>           
+                            <hr style={{ margin: '5px 0' }} />
+                            <div className="appointmentDetails-model-content1">
+                            <img src={selectedAppointment.doctor_profile_img} alt={`${selectedAppointment.doctor_name}'s profile`} />
+                                <div>
+                            <p><strong>Doctor:</strong> {selectedAppointment.doctor_name}</p>
+                            <p><strong>Department:</strong> {selectedAppointment.caretaker_type}</p>
+                            </div>
+                            <div>
+                            <p><strong>Date:</strong> {new Date(selectedAppointment.appointment_date).toLocaleDateString()}</p>
+                            <p><strong>Time:</strong> {selectedAppointment.slot_timing}</p>
+                            </div>
+                            </div>
+                            <button onClick={() => setSelectedAppointment(null)} className="appointmentList-close-button">Close</button>
+
+                        </div>
+                    )}
+                </Modal>
             </div>
         </div>
     );
@@ -159,6 +207,8 @@ const approvedStatusFormatter = (status) => {
         return "Rejected";
     } else if (status === "Done") {
         return "Completed";
+    } else if (status === "Canceled") {
+        return "Cancelled";
     } else {
         return "Active";
     }

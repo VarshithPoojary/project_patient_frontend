@@ -40,10 +40,10 @@ const ResetPasswordPage = () => {
       return;
     }
   
-    const phone_number = localStorage.getItem('userPhone');
+    const patient_email = localStorage.getItem('userEmail');
         try {
           const passwordData = {
-            patient_phone_number: phone_number,
+            patient_email: patient_email,
             password: password,
           };
       const response = await resetPassword(passwordData);
@@ -53,7 +53,7 @@ const ResetPasswordPage = () => {
         setMessage('Password changed successfully');
         setPassword('');
         setConfirmPassword('');
-        localStorage.removeItem('userPhone');
+        localStorage.removeItem('userEmail');
         setTimeout(() => Router.push('/Patientlogin'), 1000);
       } 
     } catch (err) {

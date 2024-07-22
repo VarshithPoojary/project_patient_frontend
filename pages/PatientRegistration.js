@@ -240,12 +240,12 @@ const PatientRegistrations = () => {
                 setErrorMessage(response.msg);
                 setTimeout(() => {
                     setErrorMessage('');
-                }, 1000);
+                }, 3000);
             } else {
                 setIsSuccess(true);
                 setSuccessMessage('Mail Sent To Your Email');
                 setTimeout(() => {
-                    localStorage.setItem('userPhone', phoneNumber);
+                    localStorage.setItem('userEmail', email);
                     Router.push(`/PatientLoginOTP`);
                 }, 1000);
             }
@@ -487,11 +487,12 @@ const PatientRegistrations = () => {
                                     <button className='registration-button' type="submit" disabled={isLoading}>
                                          {isLoading ? 'Loading...' : 'Register'}
                                     </button>
-                                    </div>
-                                         {isSuccess && <div className="success-message">{successMessage}</div>}
-                                         {errorMessage && <div className="error-message">{errorMessage}</div>}
-                                  
+                                   
                                  </div>
+                                 </div>
+                                         {isSuccess && <div className="success-message" style={{color:'green', textAlign:'center'}}>{successMessage}</div>}
+                                         {errorMessage && <div className="error-message" style={{color:'red', textAlign:'center'}}>{errorMessage}</div>}
+                                  
                                  </div>
                         </form>
                         <div className="text-center mt-3 login-link">

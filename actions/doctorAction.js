@@ -1,5 +1,7 @@
 import { API } from '../config';
 import fetch from 'isomorphic-fetch';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 export const doctor_list = () => {
     return fetch(`${API}/caretaker_list`,{
@@ -57,6 +59,21 @@ export const caretaker_list_by_id = doctorData => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(patientData)
+        })
+            .then(response => {
+                return response.json();
+            })
+            .catch(err => console.log(err));
+    };
+
+    export const addRatings = ratingData => {
+        return fetch(`${API}/add_rating`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ratingData)
         })
             .then(response => {
                 return response.json();

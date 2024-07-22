@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Router from 'next/router';
-import { FaGraduationCap, FaBriefcase } from 'react-icons/fa';
+import { FaGraduationCap, FaBriefcase, FaDownload } from 'react-icons/fa';
 import { FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
 import Topbar from '../topbar';
+import Head from 'next/head';
 import { caretaker_list_by_id } from '../../actions/doctorAction';
 import { appointment_list_by_id } from '../../actions/appointmentAction';
 import { patient_list_by_id } from '../../actions/patientAction';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const AppointmentPage = () => {
   const defaultProfileImage = '/images/doctorMenLogo.png';
   const router = useRouter();
   const { _id, appointmentId } = router.query;
+  const [showBill, setShowBill] = useState(false);
   const [values, setValues] = useState({
     caretaker_firstname: '',
     caretaker_lastname: '',
@@ -65,7 +69,7 @@ const AppointmentPage = () => {
         if (response.error) {
           console.log(response.error);
         } else {
-          setValues(values => ({ ...values, patientDetail: response.patient_list[0] }));
+          setValues((values) => ({ ...values, patientDetail: response.patient_list[0] }));
         }
       })
       .catch((error) => {
@@ -79,7 +83,7 @@ const AppointmentPage = () => {
         if (response.error) {
           console.log(response.error);
         } else {
-          setValues(values => ({ ...values, appointmentDetail: response.appointment_list[0] }));
+          setValues((values) => ({ ...values, appointmentDetail: response.appointment_list[0] }));
         }
       })
       .catch((error) => {
@@ -87,94 +91,250 @@ const AppointmentPage = () => {
       });
   };
 
+  const handleShowBill = () => {
+    setShowBill(true);
+  };
+
+  const handleHideBill = () => {
+    setShowBill(false);
+  };
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+  
+    const img = new Image();
+    img.src = '/images/title_logo.png';
+  
+    img.onload = () => {
+      addPage(doc, img, values, 1);
+  
+      doc.addPage();
+  
+      addPage(doc, img, values, 2);
+  
+      doc.save('invoice.pdf');
+    };
+  };
+  
+  const addPage = (doc, img, values, pageNumber) => {
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.7);
+    doc.rect(10, 10, 190, 277);
+  
+    doc.addImage(img, 'PNG', 20, 20, 20, 20); 
+    doc.setFontSize(20);
+    doc.setTextColor("#1464af");
+    doc.setFont("helvetica", "bold");
+    doc.text('CareConnect Booking System', 60, 30);
+  
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); 
+    doc.setFont("helvetica", "normal");
+    if (pageNumber === 1) {
+      doc.text('Patient name:', 14, 60);
+      doc.text(values.patientDetail.patient_first_name, 50, 60);
+  
+      doc.text('Appointment Date:', 14, 70);
+      doc.text(new Date(values.appointmentDetail.appointment_date).toLocaleDateString(), 50, 70);
+  
+      doc.text('Date Of Birth:', 14, 80);
+      doc.text(values.patientDetail.patient_dob, 50, 80);
+  
+      doc.text('Gender:', 14, 90);
+      doc.text(values.patientDetail.patient_gender, 50, 90);
+  
+      doc.text('Doctor:', 14, 100);
+      doc.text(values.doctorsDetail.caretaker_firstname + ' ' + values.doctorsDetail.caretaker_lastname, 50, 100);
+  
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("helvetica", "bold");
+      doc.text('Treatment Fees', 90, 120);
+  
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0); 
+      doc.setFont("helvetica", "normal");
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.7);
+  
+      const treatmentFeesColumns = ['S.No.', 'Treatment Name', 'Price'];
+      const treatmentFeesRows = values.appointmentDetail.amount_details.map((detail, index) => [
+        index + 1,
+        detail.treatmentName || 'N/A',
+        parseFloat(detail.amount).toFixed(2)
+      ]);
+  
+      doc.autoTable({
+        head: [treatmentFeesColumns],
+        body: treatmentFeesRows,
+        startY: 130,
+        margin: { top: 10 }
+      });
+  
+      const total = values.appointmentDetail.amount_details.reduce((acc, detail) => acc + parseFloat(detail.amount), 0);
+  
+      doc.text(`Total Amount: ₹ ${total.toFixed(2)}`, 14, doc.autoTable.previous.finalY + 10);
+  
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0); 
+      doc.setFont("helvetica", "bold");
+      doc.text('Treatment Disclaimer', 85, doc.autoTable.previous.finalY + 30);
+  
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("helvetica", "normal");
+  
+      const disclaimerColumns = ['Description'];
+      const disclaimerRows = [[values.appointmentDetail.disclaimer || 'N/A']];
+  
+      doc.autoTable({
+        head: [disclaimerColumns],
+        body: disclaimerRows,
+        startY: doc.autoTable.previous.finalY + 40,
+        margin: { top: 10 }
+      });
+    } else if (pageNumber === 2) {
+      doc.text('Patient name:', 14, 60);
+      doc.text(values.patientDetail.patient_first_name, 50, 60);
+  
+      doc.text('Doctor:', 14, 70);
+      doc.text(values.doctorsDetail.caretaker_firstname + ' ' + values.doctorsDetail.caretaker_lastname, 50, 70);
+  
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0); 
+      doc.setFont("helvetica", "bold");
+      doc.text('Medicine Details', 90, 98);
+  
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0); 
+      doc.setFont("helvetica", "normal");
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.7);
+      doc.line(14, 100, 195, 100);
+  
+      const treatmentDetails = values.appointmentDetail.amount_details.map(detail => [
+        detail.description || 'N/A'
+      ]).join(', ');
+  
+      doc.text(treatmentDetails, 14, 110, { maxWidth: 180 });
+    }
+  };
+  
+  
+  
+  
+  const mapStatus = (status) => {
+    switch (status) {
+      case 'Accepted':
+        return 'Accepted';
+      case 'Active':
+        return 'Pending';
+      case 'Canceled':
+        return 'Cancelled';
+      case 'Done':
+        return 'Completed';
+      case 'Rejected':
+        return 'Rejected';
+      default:
+        return 'Unknown';
+    }
+  };
+
   return (
     <div id="wrapper" style={{ backgroundColor: '#e9e6e6' }}>
+       <Head>
+        <title>Appointment History</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Appointment History' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
       <Topbar />
       <div className="content-page" style={{ marginLeft: '10px', position: 'relative', zIndex: '0' }}>
-        <div className="row-md-12" style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
-          <div className="patient-content-page-doctorlist">
-            <div className="appointmentHistory-doctor-details">
-              <div className="appointmentHistory-patient-info-sheet">
-                <div className="appointmentHistory-header">
-                  <h1>PATIENT REPORT</h1>
-                  {/* <h3>Appointment On {values.appointmentDetail.appointment_date} at {values.appointmentDetail.slot_timing}</h3> */}
-                  <div className="appointmentHistory-patient-info">
-                    <p>Patient Name: {values.appointmentDetail.patient_name || 'Smith'}</p>
-                    <p>Patient Number: {values.patientDetail.patient_unique_number || '21011'}</p>
-                    <p>Patient DOB: {values.patientDetail.patient_dob || 'XXXXX'}</p>
-                  </div>
-                </div>
-                <div className="appointmentHistory-doctor-info-section">
+        <div className="row-md-12" style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
+          <div className="appointmentHistory-patient-info-sheet">
+            <div className="appointmentHistory-header">
+              <h1>MEDICAL REPORT</h1>
+              <h3>Appointment {mapStatus(values.appointmentDetail.status)}</h3>
+            </div>
+            <div className="appointmentHistory-doctor-info-section">
+              <div className="appointmentHistory-doctor-details1">
+                <div className="appointmentHistory-doctor-details-img">
                   <img
                     src={values.doctorsDetail.caretaker_profile_image || defaultProfileImage}
                     alt="Profile"
                     className="appointmentHistory-doctor-img"
                   />
-                  <div className="appointmentHistory-doctor-details">
-                    <h3>{values.doctorsDetail.caretaker_firstname} {values.doctorsDetail.caretaker_lastname}</h3>
-                    <p>{values.doctorsDetail.caretaker_type}</p>
-                    <p><FaGraduationCap /> {values.doctorsDetail.degree_name}</p>
-                    <p><FaBriefcase /> {values.doctorsDetail.caretaker_work_experience} years of experience</p>
-                    <p><FiMapPin /> {values.doctorsDetail.caretaker_address}</p>
-                  </div>
                 </div>
-                <div className="appointmentHistory-appointment-details">
-                  <p><strong><FiCalendar /> Date:</strong> {values.appointmentDetail.appointment_date}</p>
-                  <p><strong><FiClock /> Time:</strong> {values.appointmentDetail.slot_timing}</p>
+                <div className="appointmentHistory-doctor-details">
+                  <h4>{values.doctorsDetail.caretaker_firstname} {values.doctorsDetail.caretaker_lastname}</h4>
+                  <p>{values.doctorsDetail.caretaker_type}</p>
+                  <p><FaGraduationCap /> {values.doctorsDetail.degree_name}</p>
+                  <p><FaBriefcase /> {values.doctorsDetail.caretaker_work_experience} years of experience</p>
+                  <p><FiMapPin /> {values.doctorsDetail.caretaker_address}</p>
                 </div>
-                <div className="appointmentHistory-patient-problems-treatments">
-                  <h2>Patient's Problems and Treatments</h2>
-                  <table>
+              </div>
+              <div className="appointmentHistory-appointment-details">
+                <p><strong><FiCalendar /> Date:</strong> {values.appointmentDetail.appointment_date}</p>
+                <p><strong><FiClock /> Time:</strong> {values.appointmentDetail.slot_timing}</p>
+              </div>
+            </div>
+            <div className="appointmentHistory-patient-problems-treatments">
+              <h2>Patient's Problems and Treatments</h2>
+              <div className="appointmentReport-disclaimer">
+                <h3>Disclaimer </h3>
+                {values.appointmentDetail.disclaimer}
+              </div>
+              <button className="appointmentReport-btn" onClick={handleShowBill}>View Bill</button>
+              {showBill && (
+                <div className="bill-details">
+                  <table className="invoice-table">
                     <thead>
                       <tr>
-                        <th>Patient System Problems</th>
-                        <th>Recommended Evaluation and Treatments</th>
+                        <th>S.No.</th>
+                        <th>Treatment Name</th>
+                        <th>Price</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Genetic Issues</td>
-                        <td>Provide Genetic Counseling<br />Medication: SATB2 Protein</td>
-                      </tr>
-                      <tr>
-                        <td>Speech and Language Issues</td>
-                        <td>Intensive Speech Therapy to be given along with certain alternative communication devices<br />Medication: XXXXXX</td>
-                      </tr>
-                      <tr>
-                        <td>Dental Issues</td>
-                        <td>Engage in Dental Management and consult a specialized Orthodontist<br />Medication: XXXXXX</td>
-                      </tr>
-                      <tr>
-                        <td>Neurological Problems</td>
-                        <td>Consider Neurotherapy treatment and mechanical aids<br />Medication: XXXXXX</td>
-                      </tr>
-                      <tr>
-                        <td>Psychological Problems</td>
-                        <td>Psychological evaluation and treat behavioral issues<br />Medication: XXXXXX</td>
-                      </tr>
-                      <tr>
-                        <td>Add patient's problems/issues here</td>
-                        <td>Add recommended treatment here<br />Medication: XXXXXX</td>
-                      </tr>
+                      {values.appointmentDetail.amount_details && values.appointmentDetail.amount_details.map((amount, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{amount.treatmentName}</td>
+                          <td>{parseFloat(amount.amount).toFixed(2)}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
-                </div>
-                <div className="appointmentHistory-recommended-section">
-                  <div className="appointmentHistory-recommended-medicines">
-                    <h3>Recommended Medicines</h3>
-                    <p>Medicine 1 - XXXXXX</p>
-                    <p>Medicine 2 - XXXXXX</p>
-                    <p>Medicine 3 - XXXXXX</p>
+                  <div className="invoice-total">
+                    Total: ₹{values.appointmentDetail.amount_details.reduce((acc, amount) => acc + parseFloat(amount.amount), 0).toFixed(2)}/-
                   </div>
-                  <div className="appointmentHistory-recommended-doctor">
-                    <h3>Recommended Doctor</h3>
-                    <p>Detail 1 - XXXXXX</p>
-                    <p>Detail 2 - XXXXXX</p>
-                    <p>Detail 3 - XXXXXX</p>
+                  {values.appointmentDetail.amount_details && values.appointmentDetail.amount_details.map((amount, index) => (
+                    <div className="appointmentReport-medicine" key={index}>
+                      <h3>Medicines</h3>
+                      {amount.description || 'N/A'}
+                    </div>
+                  ))}
+                  <div className="appointmentReport-button">
+                    <button className="appointmentReport-btn" onClick={handleDownloadPDF}><FaDownload /> Download Bill</button>
+                    <button className="appointmentReport-btn" onClick={handleHideBill}>Close</button>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
+            {/* <div className="appointmentHistory-recommended-section">
+              <div className="appointmentHistory-recommended-medicines">
+                <h3>Recommended Medicines</h3>
+                {values.appointmentDetail.recommended_medicines && values.appointmentDetail.recommended_medicines.map((medicine, index) => (
+                  <p key={index}>{medicine}</p>
+                ))}
+              </div>
+              <div className="appointmentHistory-recommended-doctor">
+                <h3>Recommended Doctor</h3>
+                {values.appointmentDetail.recommended_doctor && values.appointmentDetail.recommended_doctor.map((doctor, index) => (
+                  <p key={index}>{doctor}</p>
+                ))}
+              </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -20,10 +20,10 @@ const OTPPage = () => {
     e.preventDefault();
     console.log('Submitting form...');
   
-    const userPhone = localStorage.getItem('userPhone');
+    const userEmail = localStorage.getItem('userEmail');
   
     try {
-      const response = await getOtpByEmail(userPhone);
+      const response = await getOtpByEmail(userEmail);
       const user = response;
   
       if (user.patient_otp === otpDigits) { 
@@ -31,7 +31,7 @@ const OTPPage = () => {
         setError('');
   
         const registration_data = {
-          patient_phone_number: userPhone,
+          patient_email: userEmail,
           patient_register_status: true,
         };
   
@@ -40,7 +40,7 @@ const OTPPage = () => {
           if (updateResponse.error) {
             setError(updateResponse);
           } else {
-            localStorage.removeItem('userPhone');
+            localStorage.removeItem('userEmail');
             Router.push('/Patientlogin');
           }
         } catch (error) {
