@@ -8,6 +8,7 @@ import { country_list } from '../actions/countryAction';
 import { state_list_by_country_id,state_list } from '../actions/stateAction';
 import { city_list_by_state_id,city_list,CityListById } from '../actions/cityAction';
 import { patient_list_by_id,update_patient } from '../actions/patientAction';
+import LoadingBar from 'react-top-loading-bar'; 
 
 
 const Patienteditprofile = () => {
@@ -35,16 +36,18 @@ const Patienteditprofile = () => {
     stateList:[],
     areaList:[],
       error: '',
-      loading: false,
   });
 
-  const { countryList,stateList,areaList,patient_first_name ,patient_last_name,patient_phone_number,patient_country_code,patient_dob,patient_gender,patient_email,patient_address,patient_country_id,patient_state_id,patient_area_id,patient_pincode,patient_main_address,patient_register_status,password,patient_profile_image,patient_created_date,error, loading } = values;
-
+  const { countryList,stateList,areaList,patient_first_name ,patient_last_name,patient_phone_number,patient_country_code,patient_dob,patient_gender,patient_email,patient_address,patient_country_id,patient_state_id,patient_area_id,patient_pincode,patient_main_address,patient_register_status,password,patient_profile_image,patient_created_date,error } = values;
+  const [loading, setLoading] = useState(true); 
+  const [progress, setProgress] = useState(0); 
+  
   useEffect(() => {
       const user_id = localStorage.getItem('id');
       if (!user_id) {
           Router.push('/Patientlogin');
       } else {
+        setProgress(30);
           loadUserDetails(user_id);
       }
   }, []);
@@ -70,7 +73,6 @@ const Patienteditprofile = () => {
                   setValues({ ...values, error: data.error, loading: false });
               } else {
                   const patientData = data.patient_list[0];
-                  alert(JSON.stringify(patientData))
                   setValues({
                       ...values,
                       patient_first_name: patientData.patient_first_name,
@@ -95,12 +97,15 @@ const Patienteditprofile = () => {
                       areaList:city.city_list,
                       loading: false
                   });
-              }
+              }setProgress(100); 
+              setLoading(false); 
           })
           .catch(error => {
               console.error('Error:', error);
               setValues({ ...values, error: 'Error: Network request failed', loading: false });
-          });
+              setProgress(100); 
+              setLoading(false); 
+            });
         }
       });
     }
@@ -198,6 +203,11 @@ const Patienteditprofile = () => {
 
   return (
     <div className="container" style={{ marginTop:'0px'}}>
+           <LoadingBar
+        color="#3498db"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      /> 
           <Head>
         <title>Edit Profile</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />

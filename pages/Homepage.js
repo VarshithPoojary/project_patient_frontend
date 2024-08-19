@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import { specialist_list } from '../actions/specialistAction';
+import { add_contactUs } from '../actions/contactUsAction';
 
 const HomeContent = () => {
   const [values, setValues] = useState({
     specialists: [],
+    user_name:'',
+    user_email:'',
+    user_phone:'',
+    user_message:'',
     loading: false,
     error: ''
   });
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const { specialists, loading, error } = values;
+  const { user_name,user_email,user_phone,user_message,specialists, loading, error } = values;
 
   useEffect(() => {
     loadSpecialists();
@@ -43,6 +50,46 @@ const HomeContent = () => {
       }
     });
   };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user_name || !user_email || !user_phone || !user_message) {
+        setValues({ ...values, error: 'Please enter all fields' });
+        setTimeout(() => {
+            setValues({ ...values, error: '', loading: false });
+        }, 1000);
+        return;
+    }
+    setValues({ ...values, loading: true, error: '' });
+
+    try {
+        const contactUsData = { user_name,user_email,user_phone,user_message };
+        const response = await add_contactUs(contactUsData);
+        if (response.error) {
+            setValues({ ...values, error: 'Sorry.. Try Again', loading: false });
+            setTimeout(() => {
+                setValues({ ...values, error: '', loading: false });
+            }, 2000);
+        } else {
+            setValues({ ...values, user_name: '', user_email: '',user_phone: '',user_message: '', loading: false });
+            setIsSuccess(true);
+            setSuccessMessage('Submitted successfull! Thank You...');    
+            setTimeout(() => {
+              setSuccessMessage('');
+          }, 2000);
+              } 
+    } catch (error) {
+        console.error('Error in submission:', error);
+        setValues({ ...values, error: 'An error occurred during submission', loading: false });
+    }
+};
+
+const handleChange = (name) => (e) => {
+  setValues({ ...values, [name]: e.target.value });
+};
+
+
 
   const handleScroll = () => {
     const specialistSection = document.getElementById('specialist');
@@ -232,20 +279,23 @@ const HomeContent = () => {
       </div>
       <div className="homeSection-contact-details">
         <p>Email us</p>
-        <p className="homeSection-contact-info">contact@msupport.com</p>
+        <p className="homeSection-contact-info">doctorappointmentsystem55@gmail.com</p>
       </div>
     </div>
     <div className="homeSection-contact-form-container">
-      <form className="homeSection-contact-form">
+      <form className="homeSection-contact-form" onSubmit={handleSubmit}>
+
         <label>Name*</label>
-        <input type="text" placeholder="Write down your name" required />
+        <input type="text" value={user_name} placeholder="Write down your name"   onChange={handleChange('user_name')}  />
         <label>Email Address*</label>
-        <input type="email" placeholder="Share your email address" required />
+        <input type="email" value={user_email} placeholder="Share your email address"   onChange={handleChange('user_email')}  />
         <label>Phone*</label>
-        <input type="tel" placeholder="Share your phone number" required />
+        <input type="tel" value={user_phone} placeholder="Share your phone number"   onChange={handleChange('user_phone')}  />
         <label>Message*</label>
-        <textarea placeholder="Write your message here" required></textarea>
+        <textarea value={user_message} placeholder="Write your message here"   onChange={handleChange('user_message')} ></textarea>
         <button type="submit">Send</button>
+        {error && <div className="alert alert-danger mt-1">{error}</div>}
+        {isSuccess && <div className="success-message">{successMessage}</div>}
       </form>
     </div>
   </div>

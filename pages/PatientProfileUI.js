@@ -27,8 +27,7 @@ import { country_list } from '../actions/countryAction';
 import { state_list, state_list_by_country_id } from '../actions/stateAction';
 import { city_list,city_list_by_state_id } from '../actions/cityAction';
 import { banner_list } from '../actions/bannerAction';
-import { timers } from 'jquery';
-import { Button } from 'react-bootstrap';
+import LoadingBar from 'react-top-loading-bar';
 
 
 
@@ -41,6 +40,9 @@ const PatientProfile = () => {
     const [country, setCountry] = useState('');
     const [state, setState] = useState('');
     const [area, setArea] = useState('');
+    const [loading, setLoading] = useState(true);  
+const [progress, setProgress] = useState(0); 
+
   const [values, setValues] = useState({
     patient_list: [],
     patient_first_name: '',
@@ -59,7 +61,7 @@ const PatientProfile = () => {
     patient_profile_image: '',
     patient_password: '',
     error: '',
-    loading: false,
+    // loading: false,
     message: '',
     showForm: false, 
     address: {},
@@ -72,7 +74,7 @@ const PatientProfile = () => {
     isModalOpen: false,
   });
 
-  const { patient_list,patient_first_name ,patient_last_name,patient_phone_number,patient_country_code,patient_dob,patient_gender,patient_email,patient_address,patient_country_id,patient_state_id,patient_area_id,patient_pincode,patient_main_address,patient_register_status,password,patient_city_id, patient_profile_image,countrydetail, statedetail, citydetail,bannerList, error, loading, isEditingAddress, isEditingDetails, isModalOpen } = values;
+  const { patient_list,patient_first_name ,patient_last_name,patient_phone_number,patient_country_code,patient_dob,patient_gender,patient_email,patient_address,patient_country_id,patient_state_id,patient_area_id,patient_pincode,patient_main_address,patient_register_status,password,patient_city_id, patient_profile_image,countrydetail, statedetail, citydetail,bannerList, error, isEditingAddress, isEditingDetails, isModalOpen } = values;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -80,6 +82,7 @@ const PatientProfile = () => {
       if (user_id === "" || user_id === null || user_id === undefined) {
         Router.push('/Patientlogin');
       } else {
+        setProgress(30);
          loadUserDetails(user_id);
       }
     }
@@ -133,11 +136,14 @@ const PatientProfile = () => {
             patient_profile_image: patientData.patient_profile_image || defaultProfileImage,
             loading: false
           });
-        }
+        }setProgress(100); 
+        setLoading(false); 
       })
       .catch(error => {
         console.error('Error:', error);
         setValues({ ...values, error: 'Error: Network request failed', loading: false });
+        setProgress(100); 
+        setLoading(false); 
       });
     }
     });
@@ -273,7 +279,7 @@ const handleSaveDetails = async (e) => {
   formData.append('patient_id', patient_id);
   formData.append('patient_first_name', values.patient_first_name);
   formData.append('patient_last_name', values.patient_last_name);
-  formData.append('demoimg', values.patient_profile_image); // Assuming profileImage is a file object
+  formData.append('demoimg', values.patient_profile_image); 
   formData.append('patient_phone_number', values.patient_phone_number);
   formData.append('patient_dob', values.patient_dob);
   formData.append('patient_gender', values.patient_gender);
@@ -307,7 +313,7 @@ const handleSaveAddress = async (e) => {
   formData.append('patient_id', patient_id);
   formData.append('patient_first_name', values.patient_first_name);
   formData.append('patient_last_name', values.patient_last_name);
-  formData.append('demoimg', values.patient_profile_image); // Assuming profileImage is a file object
+  formData.append('demoimg', values.patient_profile_image); 
   formData.append('patient_phone_number', values.patient_phone_number);
   formData.append('patient_dob', values.patient_dob);
   formData.append('patient_gender', values.patient_gender);
@@ -374,7 +380,11 @@ const renderEditButton = () => {
 
 return (
   <section className="patient-profile">
-    
+     <LoadingBar
+        color="#3498db"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      /> 
        <Head>
         <title>Profile</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />

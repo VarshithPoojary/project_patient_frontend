@@ -38,21 +38,24 @@ function Specialist() {
 
   const handleViewDoctors = (specialistName) => {
     Router.push({
-      pathname: '/Doctor/doctorListBySpecialist' ,
+      pathname: '/Doctor/doctorListBySpecialist',
       query: {
-        specialist_type_name: specialistName
-      }
-  });  };
-
+        specialist_type_name: specialistName,
+      },
+    });
+  };
 
   return (
     <>
       <Topbar />
       <div className="specialist-container my-8">
-      <h2 class="specialist-view-heading"><span class="serif">Choose A </span><span class="sans-serif"> Specialist </span><span class="serif"> You Want </span></h2>
-        {/* <h2 className="text-center mb-4">Choose a Specialist You Want</h2> */}
+        <h2 className="specialist-view-heading">
+          <span className="serif">Choose A </span>
+          <span className="sans-serif"> Specialist </span>
+          <span className="serif"> You Want </span>
+        </h2>
         <div className="home-specialists-container">
-        <div className="home-specialists-grid">
+          <div className="home-specialists-grid">
             {values.specialistList.map((specialist, index) => (
               <div
                 key={index}
@@ -68,12 +71,10 @@ function Specialist() {
           <div className="specialist-side-image">
             <img src="/images/fullDoctor-1.png" alt="Specialists" layout="fill" objectFit="cover" />
           </div>
-          </div>
-           <div className='specialist-view-footer'>
-
-</div>
         </div>
-        <div className="specialist-floating-button">
+        <div className="specialist-view-footer"></div>
+      </div>
+      <div className="specialist-floating-button">
         <button className="specialist-btn-warning">Book Appointment</button>
       </div>
     </>

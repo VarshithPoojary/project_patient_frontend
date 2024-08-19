@@ -110,40 +110,52 @@ const App = () => {
                         </Link>
                                 </div>
                                 <div className="col d-none d-sm-block home-link-main">
-                                    <a href="./Patientlogin" target="_blank" className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
+                                <Link href="./Patientlogin">
+                                    <a className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
                                         <img src="/images/plus-1.png" alt="icon" />
                                         <h5>Book Health Check-Up</h5>
                                     </a>
+                                    </Link>
                                 </div>
                                 <div className="col d-sm-none d-block home-link-main">
-                                    <a href="./Patientlogin" target="_blank" className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
+                                <Link href="./Patientlogin">
+                                    <a className="home-tp_widget" id="home-btn-cta-bb-book-prohealth">
                                         <img src="/images/calendar-2.png" alt="icon" />
                                         <h5>Book Health Check-Up</h5>
                                     </a>
+                                    </Link>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Patientlogin" id="home-btn-cta-bb-consult-online" target="_blank" className="home-tp_widget">
+                                <Link href="./Patientlogin">
+                                    <a  id="home-btn-cta-bb-consult-online"  className="home-tp_widget">
                                         <img src="/images/calendar-1 (11).png" alt="icon" />
                                         <h5>Consult Online</h5>
                                     </a>
+                                    </Link>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Patientlogin" id="home-btn-cta-bb-buy-medicine" target="_blank" className="home-tp_widget">
+                                <Link href="./Patientlogin">
+                                    <a id="home-btn-cta-bb-buy-medicine"  className="home-tp_widget">
                                         <img src="/images/medicine-1.png" alt="icon" />
                                         <h5>Buy Medicine</h5>
                                     </a>
+                                    </Link>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Patientlogin" id="home-btn-cta-bb-find-hospital" className="home-tp_widget">
+                                <Link href="./Patientlogin">
+                                    <a  id="home-btn-cta-bb-find-hospital" className="home-tp_widget">
                                         <img src="/images/search-1.png" alt="icon" />
                                         <h5>Find Hospital</h5>
                                     </a>
+                                    </Link>
                                 </div>
                                 <div className="col home-link-main">
-                                    <a href="./Patientlogin" target="_blank" id="home-btn-cta-bb-book-labtest" className="home-tp_widget">
+                                <Link href="./Patientlogin">
+                                    <a  id="home-btn-cta-bb-book-labtest" className="home-tp_widget">
                                         <img src="/images/calendar-1 (10).png" alt="icon" />
                                         <h5>View Health Record</h5>
                                     </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

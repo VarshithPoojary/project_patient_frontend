@@ -293,6 +293,7 @@ body.enlarged {
   height: 70px;
   width: 240px;
   float: left; }
+  
 .navbar {
  /* background: rgba(119, 218, 238,0.5);*/
  background-color: #0071BA;
@@ -342,50 +343,61 @@ body.enlarged {
     height: auto; 
     margin: 0; 
   }
-.navbar-custom {
-  background: #ffffff;
-  -webkit-box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
-          box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
-  padding: 0 10px 0 0 ;
-  position: fixed;
-  left:0px;
-  right:0; 
-  height: 70px;
-  /* z-index: 4; */
-  /* Search */ }
-
-  .navbar-custom .topnav-menu > li {
-    float: left; 
+  .navbar-custom {
+    background: #ffffff;
+    -webkit-box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
+            box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
+    padding: 0 10px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 70px;
+    width: 100%; /* Ensure the navbar takes the full width */
+    z-index: 1000; /* Ensure the navbar stays on top of other elements */
+    display: flex; /* Use Flexbox for alignment */
+    align-items: center;
+    justify-content: space-between;
   }
-
+  
+  .navbar-custom .topnav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Use Flexbox for aligning the items */
+  }
+  
+  .navbar-custom .topnav-menu > li {
+    margin-right: 10px; /* Adjust spacing between menu items */
+  }
+  
   .topbar-nav-link {
     margin-top: 15px;
     color: #9a9696;
-    text-decoration: none; 
+    text-decoration: none;
     font-family: sans-serif;
-  font-size: 12px; 
-  font-weight: 300;
-    position: relative; 
-    transition: color 0.3s ease; 
-}
-
-.topbar-nav-link:hover {
-    color: #2b2b2b; 
-    border-bottom: 2px solid #535252; 
-    /* border: 2px solid #535252;  */
+    font-size: 12px;
+    font-weight: 300;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  .topbar-nav-link:hover {
+    color: #2b2b2b;
+    border-bottom: 2px solid #535252;
     margin-bottom: 10px;
-}
-
-.topbar-nav-link:hover::after {
+  }
+  
+  .topbar-nav-link:hover::after {
     content: "";
     position: absolute;
     left: 0;
-    bottom: -4px; 
+    bottom: -4px;
     width: 100%;
     height: 1.5px;
     background-color: #ffffff;
-    transition: width 0.3s ease; 
-}
+    transition: width 0.3s ease;
+  }
+  
 
 
   .navbar-custom .topnav-menu .nav-link {

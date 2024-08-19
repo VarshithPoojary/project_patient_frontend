@@ -6,10 +6,10 @@ import Head from 'next/head';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import Cookies from 'universal-cookie';
-import { FaHome, FaBell, FaCog, FaComment, FaUserMd, FaRegImage, FaBriefcase, FaGraduationCap, FaHandsHelping, FaShoppingCart, FaBookMedical, FaCalendar, FaNotesMedical, FaSquareFull, FaEye, FaCalendarAlt } from 'react-icons/fa';
+import { FaHome, FaBell, FaCog, FaComment, FaUserMd, FaRegImage, FaBriefcase, FaGraduationCap, FaHandsHelping, FaShoppingCart, FaBookMedical, FaCalendar, FaNotesMedical, FaSquareFull, FaEye, FaCalendarAlt, FaLocationArrow } from 'react-icons/fa';
 import { BiCalendarPlus, BiUser, BiListUl, BiCart, BiEdit, BiClinic, BiUserPlus, BiMap, BiCreditCard } from 'react-icons/bi';
 import { GiMedicines } from "react-icons/gi";
-import { FiHome, FiLogOut, FiMapPin, FiUsers } from "react-icons/fi";
+import { FiHome, FiLogOut, FiMapPin, FiUsers, FiMap } from "react-icons/fi";
 import { patient_list_by_id } from '../actions/patientAction';
 import { banner_list } from '../actions/bannerAction';
 import { findDoctorsWithinRadius } from '../actions/doctorAction';
@@ -179,13 +179,9 @@ const Users = () => {
                             <img src={values.patient_profile_image} alt="Profile" style={{ width: '80px', height: '80px', borderRadius: '50%', marginTop: '20px' }} />
                         </span>
                         <div className="profile-info" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#535252' }}>
-                            <div style={{ color: 'black', fontSize: '16px', fontFamily: 'Arial, sans-serif', fontWeight: 'bold', margin:'10px' }}> {values.patient_first_name} {values.patient_last_name}</div>
-                            <h6 style={{display:'flex', position:'relative', textAlign:'center', color:'#a3a2a2',fontFamily: ' sans-serif', fontSize:'15px'}}>
-                                 Your health is our priority. Book appointments, view records, and stay connected with your healthcare team.</h6>
-                            {/* <div>{values.patient_phone_number}</div>
-                            <div>{values.patient_email}</div>
-                            <div>{values.patient_dob}</div>
-                            <div>{values.patient_gender}</div> */}
+                            <div style={{ color: 'black', fontSize: '16px', fontFamily: 'Arial, sans-serif', fontWeight: 'bold', margin:'10px' }}> {values.patient_first_name} {values.patient_last_name} </div>
+                            <h6 style={{display:'flex', position:'relative', textAlign:'center',fontFamily: ' sans-serif', fontSize:'15px'}}><FiMapPin style={{width:'40px', color:'gray'}}/>{values.patient_address}</h6>
+                                 {/* Your health is our priority. Book appointments, view records, and stay connected with your healthcare team.</h6> */}
                         </div>
                         <hr style={{ margin: '12px 0' }} />
                         <div className="patient-custom-sidebar" style={{ padding: '10px', backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', borderRadius: '5px', marginBottom: '20px' }}>
