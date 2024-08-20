@@ -968,6 +968,10 @@ body {
 	background-color: #20718e;
   }
 
+  .profile-personal-edit{
+	margin-top: 5px;
+  }
+
   /* patient edit address */
   .edit-address-form-container {
 	position: fixed;
@@ -1962,8 +1966,9 @@ background-color: #000;
   .specialistView-doctor-list {
 	display: flex;
 	flex-wrap: wrap;
+	padding:0 60px;
 	gap: 15px;
-	justify-content: space-around;
+	justify-content: space-between;
   }
   
   .specialistView-card {

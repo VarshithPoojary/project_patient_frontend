@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { specialist_list } from '../../actions/specialistAction';
 import Router from 'next/router';
 import Topbar from '../topbar';
+import Head from 'next/head';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Specialist() {
@@ -47,6 +48,12 @@ function Specialist() {
 
   return (
     <>
+     <Head>
+        <title>Specialist View</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Specialist-View' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
       <Topbar />
       <div className="specialist-container my-8">
         <h2 className="specialist-view-heading">

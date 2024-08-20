@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { FaGraduationCap, FaBriefcase, FaCalendarDay, FaCheck, FaTimes, FaClock } from 'react-icons/fa';
 import { FiMapPin, FiEdit2, FiXCircle, FiCalendar, FiClock, FiDelete } from 'react-icons/fi';
 import Topbar from '../topbar';
+import Head from 'next/head';
 import { caretaker_list_by_id } from '../../actions/doctorAction';
 import { get_available_slots, update_appointment, appointment_cancel, appointment_list_by_id } from '../../actions/appointmentAction';
 import { patient_list_by_id } from '../../actions/patientAction';
@@ -258,6 +259,12 @@ const AppointmentPage = () => {
 
   return (
     <div id="wrapper" className="appointmentView-wrapper">
+         <Head>
+        <title>Appointment View</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Appointment-View' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
       <Topbar />
       <div className="appointmentView-content-page">
         <div className="appointmentView-row-md-12">

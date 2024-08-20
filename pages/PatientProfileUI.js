@@ -123,9 +123,9 @@ const [progress, setProgress] = useState(0);
             patient_gender: patientData.patient_gender,
             patient_email: patientData.patient_email,
             patient_address: patientData.patient_address,
-            patient_country_id: patientData.patient_country_id,
-            patient_state_id: patientData.patient_state_id,
-            patient_area_id: patientData.patient_area_id,
+            patient_country: patientData.patient_country_id,
+            patient_state: patientData.patient_state_id,
+            patient_area: patientData.patient_area_id,
             patient_pincode: patientData.patient_pincode,
             patient_main_address: patientData.patient_main_address,
             password: patientData.password,
@@ -207,11 +207,11 @@ const handleStateChange = (admin_state_id) => {
 
 
 const handleEditAddress = () => {
-  setValues({ ...values, isEditingAddress: true });
+  setValues({ ...values, isEditingAddress: true, isEditingDetails: false });
 };
 
 const handleEditDetails = () => {
-  setValues({ ...values, isEditingDetails: true });
+  setValues({ ...values, isEditingDetails: true, isEditingAddress: false });
 };
 
 const handleCancelEditAddress = () => {
@@ -255,11 +255,13 @@ const handleCancelEditDetails = () => {
         const patientData = data.patient_list[0];
         setValues({
           ...values,
-          patient_address: patientData.patient_address,
-          patient_country_id: patientData.patient_country_id,
-          patient_state_id: patientData.patient_state_id,
-          patient_area_id: patientData.patient_area_id,
-          patient_pincode: patientData.patient_pincode,
+          patient_first_name: patientData.patient_first_name,
+          patient_last_name: patientData.patient_last_name,
+          patient_phone_number: patientData.patient_phone_number,
+          patient_country_code: patientData.patient_country_code,
+          patient_dob: patientData.patient_dob,
+          patient_gender: patientData.patient_gender,
+          patient_email: patientData.patient_email,
           isEditingAddress: false,
           isEditingDetails: false
         });
@@ -284,11 +286,11 @@ const handleSaveDetails = async (e) => {
   formData.append('patient_dob', values.patient_dob);
   formData.append('patient_gender', values.patient_gender);
   formData.append('patient_email', values.patient_email);
-  formData.append('patient_address', values.patient_address);
-  formData.append('patient_country_id', values.patient_country_id);
-  formData.append('patient_state_id', values.patient_state_id);
-  formData.append('patient_area_id', values.patient_area_id);
-  formData.append('patient_pincode', values.patient_pincode);
+  // formData.append('patient_address', values.patient_address);
+  // formData.append('patient_country_id', values.patient_country_id);
+  // formData.append('patient_state_id', values.patient_state_id);
+  // formData.append('patient_area_id', values.patient_area_id);
+  // formData.append('patient_pincode', values.patient_pincode);
   try {
     alert(JSON.stringify(formData))
     const response = await update_patient(formData);
@@ -311,22 +313,21 @@ const handleSaveAddress = async (e) => {
   const patient_id = localStorage.getItem('id');
   const formData = new FormData();
   formData.append('patient_id', patient_id);
-  formData.append('patient_first_name', values.patient_first_name);
-  formData.append('patient_last_name', values.patient_last_name);
   formData.append('demoimg', values.patient_profile_image); 
-  formData.append('patient_phone_number', values.patient_phone_number);
-  formData.append('patient_dob', values.patient_dob);
-  formData.append('patient_gender', values.patient_gender);
-  formData.append('patient_email', values.patient_email);
+   formData.append('patient_address', values.patient_address);
+  formData.append('patient_country_id', values.patient_country_id);
+  formData.append('patient_state_id', values.patient_state_id);
+  formData.append('patient_area_id', values.patient_area_id);
+  formData.append('patient_pincode', values.patient_pincode);
   try {
     const response = await update_patient(formData);
 
     if (response.error) {
       setValues({ ...values, error: response.error });
     } else {
-      setValues({ ...values, isEditingDetails: false });
+      setValues({ ...values,  isModalOpen: true, isEditingDetails: false , isEditingAddress: false});
       const user_id = localStorage.getItem('id');
-      loadUserDetails(user_id);
+      // loadUserDetails(user_id);
     }
   } catch (error) {
     console.error('Error:', error);
@@ -335,7 +336,7 @@ const handleSaveAddress = async (e) => {
 };
 
 const closeModal = () => {
-  setValues({ ...values, isModalOpen: false , isEditingDetails: false , isEditingAddress:false});
+  setValues({ ...values, isModalOpen: false });
   Router.push(`/PatientProfileUI`);
 };
 
@@ -356,7 +357,7 @@ const renderEditButton = () => {
   if (isEditingAddress) {
     return (
       <div>
-        <button onClick={handleSaveDetails} className="patient-profile-edit-btn">Submit</button>
+        <button onClick={handleSaveAddress} className="patient-profile-edit-btn">Submit</button>
         <button onClick={handleCancelEditAddress} className="patient-profile-back-btn">Cancel</button>
       </div>
     );
@@ -513,8 +514,8 @@ return (
   <div className="col-md-12">
     {isEditingDetails ? (
       <div>
-      <input className="form-control col-md-12" type="text" value={values.patient_first_name} onChange={handleChange('patient_first_name')} />
-      <input className="form-control col-md-12" type="text" value={values.patient_last_name} onChange={handleChange('patient_last_name')} />
+      <input className="form-control col-md-12 profile-personal-edit" type="text" value={values.patient_first_name} onChange={handleChange('patient_first_name')} />
+      <input className="form-control col-md-12 profile-personal-edit" type="text" value={values.patient_last_name} onChange={handleChange('patient_last_name')} />
       </div>
     ) : (
       <label htmlFor="FirstName">{values.patient_first_name} {values.patient_last_name}</label>
@@ -522,21 +523,21 @@ return (
   </div>
   <div className="col-md-12">
     {isEditingDetails ? (
-      <input className="form-control col-md-12" type="text" value={values.patient_phone_number} onChange={handleChange('patient_phone_number')} />
+      <input className="form-control col-md-12 profile-personal-edit" type="text" value={values.patient_phone_number} onChange={handleChange('patient_phone_number')} />
     ) : (
       <label htmlFor="FirstName">{values.patient_phone_number}</label>
     )}
   </div>
   <div className="col-md-12">
     {isEditingDetails ? (
-      <input className="form-control col-md-12" type="date" value={values.patient_dob} onChange={handleChange('patient_dob')} />
+      <input className="form-control col-md-12 profile-personal-edit" type="date" value={values.patient_dob} onChange={handleChange('patient_dob')} />
     ) : (
       <label htmlFor="FirstName">{values.patient_dob}</label>
     )}
   </div>
   <div className="col-md-12">
     {isEditingDetails ? (
-      <div className="col-md-12">
+      <div className="col-md-12 profile-personal-edit">
       <div className="form-check form-check-inline">
         <input
           className="form-check-input"
@@ -581,7 +582,7 @@ return (
   </div>
   <div className="col-md-12">
     {isEditingDetails ? (
-      <input className="form-control col-md-12" type="text" value={values.patient_email} onChange={handleChange('patient_email')} />
+      <input className="form-control col-md-12 profile-personal-edit" type="text" value={values.patient_email} onChange={handleChange('patient_email')} />
     ) : (
       <label htmlFor="FirstName">{values.patient_email}</label>
     )}
@@ -591,7 +592,7 @@ return (
  </form>
 </div>
 <div className="col-md-6">
-<form className="form" onSubmit={handleSaveDetails} noValidate>
+<form className="form" onSubmit={handleSaveAddress} noValidate>
   <div className="patient-card-header">
       <span>{<FiMapPin />} Address Details</span>
       <span className="patient-edit-icon" onClick={handleEditAddress}>{< BiEdit />}</span> 
@@ -608,7 +609,7 @@ return (
         <div className="col-md-12">
         {/* {isEditingAddress && <label className="small mb-1" htmlFor="country">Country:</label>} */}
             {isEditingAddress ? (
-              <select className="form-control" id="country" name="country" value={values.patient_country_id} onChange={handleChange('patient_country_id')}>
+              <select className="form-control profile-personal-edit" id="country" name="country" value={values.patient_country_id} onChange={handleChange('patient_country_id')}>
               {countrydetail.map(country => (
                 <option key={country._id} value={country._id}>
                   {country.admin_country_name}
@@ -617,12 +618,12 @@ return (
             </select>
               // <input type="text" value={values.patient_country_id} onChange={(e) => setValues({ ...values, patient_country_id: e.target.value })} />
             ) : (
-              <label htmlFor="country">{values.patient_country_id}</label>
+              <label htmlFor="country">{values.patient_country}</label>
             )}
         </div>
         <div className="col-md-12">
             {isEditingAddress ? (
-               <select className="form-control" id="state" name="state"  value={values.patient_state_id} onChange={handleChange('patient_state_id')}>
+               <select className="form-control profile-personal-edit" id="state" name="state"  value={values.patient_state_id} onChange={handleChange('patient_state_id')}>
                {statedetail.map(state => (
                  <option key={state._id} value={state._id}>
                    {state.admin_state_name}
@@ -631,12 +632,12 @@ return (
              </select>
               // <input type="text" value={values.patient_state_id} onChange={(e) => setValues({ ...values, patient_state_id: e.target.value })} />
             ) : (
-              <label htmlFor="country">{values.patient_state_id}</label>
+              <label htmlFor="country">{values.patient_state}</label>
             )}
         </div>
         <div className="col-md-12">
             {isEditingAddress ? (
-               <select className="form-control" id="city" name="city"  value={values.patient_area_id} onChange={handleChange('patient_area_id')}>
+               <select className="form-control profile-personal-edit" id="city" name="city"  value={values.patient_area_id} onChange={handleChange('patient_area_id')}>
                
                {citydetail.map(city => (
                  <option key={city._id} value={city._id}>
@@ -646,12 +647,12 @@ return (
              </select>
               // <input type="text" value={values.patient_area_id} onChange={(e) => setValues({ ...values, patient_area_id: e.target.value })} />
             ) : (
-              <label htmlFor="country">{values.patient_area_id}</label>
+              <label htmlFor="country">{values.patient_area}</label>
             )}
         </div>
         <div className="col-md-12">
             {isEditingAddress ? (
-              <input type="text" className="form-control" value={values.patient_pincode} onChange={(e) => setValues({ ...values, patient_pincode: e.target.value })} />
+              <input type="text" className="form-control profile-personal-edit" value={values.patient_pincode} onChange={(e) => setValues({ ...values, patient_pincode: e.target.value })} />
             ) : (
               <label htmlFor="country">{values.patient_pincode}</label>
             )}

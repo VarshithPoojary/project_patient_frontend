@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Topbar from '../topbar';
+import Head from 'next/head';
 import { FaGraduationCap, FaPhone, FaEye, FaDownload } from 'react-icons/fa';
 import { appointment_list_by_patientId } from '../../actions/appointmentAction';
 import { addRatings } from '../../actions/doctorAction';
@@ -249,6 +250,12 @@ const CompletedAppointments = () => {
 
     return (
         <>
+         <Head>
+        <title>Appointment Report</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Appointment-Report' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
             <Topbar />
             <div className='appointmentReport-main'>
                 <div className="appointmentReport-container">

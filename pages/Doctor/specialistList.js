@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { specialist_list } from '../../actions/specialistAction';
+import Head from 'next/head';
 import Router from 'next/router';
 import Topbar from '../topbar';
 
@@ -44,6 +45,12 @@ const Doctors = () => {
 
   return (
     <>
+     <Head>
+        <title>Specialist List</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Specialist-List' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
       <Topbar />
       <div className="specialist-container my-8">
         <h2 className="specialist-heading">DOCTORS</h2>

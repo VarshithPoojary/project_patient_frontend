@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Router from 'next/router';
 import Topbar from '../topbar';
+import Head from 'next/head';
 import { FaUserMd,FaBriefcase,FaGraduationCap } from 'react-icons/fa';
 import { FiMapPin } from 'react-icons/fi';
 import { patient_list_by_id } from '../../actions/patientAction';
@@ -124,6 +125,12 @@ const DoctorList = () => {
 
   return (
     <div id="wrapper" style={{backgroundColor:'#e9e6e6'}}>
+       <Head>
+        <title>{router.query.specialist_type_name} Doctors</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Doctor-List' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
       <Topbar />
       <div className="content-page" style={{marginLeft:'10px', position:'relative', zIndex:'0'}}>
         <div className="row-md-12" style={{display:'flex',flexDirection:'column', marginTop:'20px'}}>

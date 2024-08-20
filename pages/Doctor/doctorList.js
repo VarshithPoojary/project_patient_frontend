@@ -5,6 +5,7 @@ import { FaGraduationCap, FaBriefcase } from 'react-icons/fa';
 import { FiMapPin } from 'react-icons/fi';
 import Link from 'next/link';
 import Topbar from '../topbar';
+import Head from 'next/head';
 import { patient_list_by_id } from '../../actions/patientAction';
 import { banner_list } from '../../actions/bannerAction';
 import { findDoctorsWithinRadius } from '../../actions/doctorAction';
@@ -183,6 +184,12 @@ const Users = () => {
 
     return (
         <div id="wrapper" style={{ backgroundColor: '#e9e6e6' }}>
+             <Head>
+        <title>Doctor List</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Doctor-List' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
             <Topbar />
             <div className="doctorList-banner">
                 <div className="doctorList-bannerContent">

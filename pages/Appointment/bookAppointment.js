@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { FaGraduationCap, FaBriefcase,FaCalendar, FaCheck } from 'react-icons/fa';
 import { FiMapPin,FiCalendar } from 'react-icons/fi';
 import Topbar from '../topbar';
+import Head from 'next/head';
 import { caretaker_list_by_id } from '../../actions/doctorAction';
 import { get_available_slots, add_appointment } from '../../actions/appointmentAction';
 import { patient_list_by_id } from '../../actions/patientAction';
@@ -192,6 +193,12 @@ const AppointmentPage = () => {
 
   return (
     <div id="wrapper" style={{ backgroundColor: '#e9e6e6' }}>
+         <Head>
+        <title>Book Appointment</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="title" content='Appointment-Book' />
+        <link rel="icon" href="/images/title_logo.png" />
+      </Head>
       <Topbar />
       {/* <div className="appointment-banner">
         <img
